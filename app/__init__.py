@@ -38,5 +38,5 @@ def create_app(config=Config):
 
     return app
 
-from app import admin, models
+from app import models
 
