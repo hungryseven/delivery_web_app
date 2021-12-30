@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block app_content %}
+    {% include '_flashed.html' %}
+    <div class="container">
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-12 col-md-6 col-lg-4 col-xl-4">
+                <h4 class="mb-4 text-center">Авторизация</h4>
+                <form action="" method="post" novalidate>
+                    {{ form.hidden_tag() }}
+                    <div class="form-floating mb-3">
+                        {{ form.email(class_="form-control", id="floatingInput", placeholder="name@example.com") }}
+                        {{ form.email.label(for="floatingInput") }}
+                        {% for error in form.email.errors %}
+                            <span style="color: red;">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="form-floating mb-3">
+                        {{ form.password(class_="form-control", id="floatingInput", placeholder="Пароль") }}
+                        {{ form.password.label(for="floatingInput") }}
+                        {% for error in form.password.errors %}
+                            <span style="color: red;">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="mb-3 form-check">
+                        {{ form.remember_me(class_="form-check-input", id="Check") }}
+                        {{ form.remember_me.label(class_="form-check-label", for="Check") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.submit(class_="btn btn-primary btn-lg w-100") }}
+                    </div>
+                </form>
+                <div class="mb-3 text-center">
+                    <p><a href="#" class="text-decoration-none">Забыли пароль?</a></p>
+                    <p>
+                        Впервые у нас?
+                        <a href="{{ url_for('auth.register') }}" class="text-decoration-none">Зарегистрироваться</a>
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -8,6 +8,8 @@ from config import Config
 db = SQLAlchemy()
 migrate = Migrate()
 login = LoginManager()
+login.login_view = 'auth.login'
+login.login_message = 'Авторизуйтесь для доступа к данной странице'
 admin = Admin()
 
 def create_app(config=Config):
