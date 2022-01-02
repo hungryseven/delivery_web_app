@@ -8,7 +8,8 @@ validaion_messages = {
     'incorrect email': 'Неверный формат электронной почты',
     'not equal': 'Пароли не совпадают',
     'incorrect password': 'Неверный формат пароля',
-    'length': 'Пароль должен содержать минимум 8 символов'
+    'length': 'Пароль должен содержать минимум 8 символов',
+    'email not available': 'Введенный адрес электронной почты уже используется'
 }
 
 class LoginForm(FlaskForm):
@@ -36,4 +37,4 @@ class RegisterForm(FlaskForm):
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
-            raise ValidationError('Введенный адрес электронной почты уже используется')
+            raise ValidationError(validaion_messages['email not available'])

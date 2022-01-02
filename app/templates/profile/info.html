@@ -2,4 +2,100 @@
 
 {% block app_content %}
     {% include 'profile/_navbar.html' %}
+    {% include '_flashed.html' %}
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="col-12 col-md-6 col-lg-4 col-xl-4 mx-5">
+                <h5 class="mb-4 text-center">Персональные данные</h5>
+                <form action="" method="post" novalidate>
+                    {{ info_form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ info_form.sex.label(class_="mb-1") }}<br>
+                        {% for subfield in info_form.sex %}
+                            <tr>
+                                <td>{{ subfield(class_="form-check-input") }}</td>
+                                <td>{{ subfield.label(class_="form-check-label mb-1") }}</td>
+                            </tr><br>
+                        {% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        {{ info_form.first_name.label(class_="form-label", for="InputName") }}
+                        {{ info_form.first_name(class_="form-control", id="InputName", value=current_user.first_name) }}
+                        {% for error in info_form.first_name.errors %}
+                            <span style="color: red;">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        {{ info_form.phone_number.label(class_="form-label", for="InputPhone") }}
+                        {% if not current_user.phone_number %}
+                            {{ info_form.phone_number(class_="form-control", id="InputPhone", placeholder="89001234567", value='') }}
+                        {% else %}
+                            {{ info_form.phone_number(class_="form-control", id="InputPhone", placeholder="89001234567", value=current_user.phone_number) }}
+                        {% endif %}
+                        {% for error in info_form.phone_number.errors %}
+                            <span style="color: red;">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        {{ info_form.email.label(class_="form-label", for="InputEmail") }}
+                        {{ info_form.email(class_="form-control", id="InputEmail", value=current_user.email) }}
+                        {% for error in info_form.email.errors %}
+                            <span style="color: red;">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        {{ info_form.submit_info(class_="btn btn-primary w-100") }}
+                    </div>
+                </form>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4 col-xl-4 mx-5">
+                <h5 class="mb-4 text-center">Безопасность</h5>
+                <div class="mt-1">
+                    <p>
+                        Вы можете изменить пароль в любой момент.
+                        Для этого вам нужно ввести старый пароль в первое поле и новый — во второе.
+                    </p>
+                </div>
+                <button class="btn btn-primary btn-lg w-100 mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapse">
+                    Изменить пароль
+                </button>
+                <div class="collapse" id="collapse">
+                    <form action="" method="post" novalidate>
+                        {{ password_form.hidden_tag() }}
+                        <div class="mb-3">
+                            {{ password_form.current_password.label(class_="form-label", for="InputCurrentPassword") }}
+                            {{ password_form.current_password(class_="form-control", id="InputCurrentPassword") }}
+                            {% for error in password_form.current_password.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                            <div class="mt-1">
+                                <p><a href="#" class="text-decoration-none">Забыли пароль?</a></p>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            {{ password_form.new_password.label(class_="form-label", for="InputNewPassword") }}
+                            {{ password_form.new_password(class_="form-control", id="InputNewPassword") }}
+                            {% for error in password_form.new_password.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                            <div id="PasswordHelp" class="form-text">
+                                Ваш пароль должен состоять из 8-20 символов, содержать буквы и цифры и не должен содержать пробелов, 
+                                специальных символов или эмодзи.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            {{ password_form.new_password2.label(class_="form-label", for="InputNewPassword2") }}
+                            {{ password_form.new_password2(class_="form-control", id="InputNewPassword2") }}
+                            {% for error in password_form.new_password2.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        <div class="mb-3">
+                            {{ password_form.submit_password(class_="btn btn-primary w-100") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
