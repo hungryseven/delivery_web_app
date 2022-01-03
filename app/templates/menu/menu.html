@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block app_content %}
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-4 g-3">
+            {% for category in categories %}
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="https://bris-group.ru/wp-content/uploads/2016/02/registratsiya-offshornyih-kompaniy.jpg" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">{{ category.name_category }}</h5>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

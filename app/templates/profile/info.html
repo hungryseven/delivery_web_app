@@ -12,10 +12,17 @@
                     <div class="mb-3">
                         {{ info_form.sex.label(class_="mb-1") }}<br>
                         {% for subfield in info_form.sex %}
-                            <tr>
-                                <td>{{ subfield(class_="form-check-input") }}</td>
-                                <td>{{ subfield.label(class_="form-check-label mb-1") }}</td>
-                            </tr><br>
+                            {% if current_user.sex == subfield.label.text %}
+                                <tr>
+                                    <td>{{ subfield(class_="form-check-input", checked="checked") }}</td>
+                                    <td>{{ subfield.label(class_="form-check-label mb-1") }}</td>
+                                </tr><br>
+                            {% else %}
+                                <tr>
+                                    <td>{{ subfield(class_="form-check-input") }}</td>
+                                    <td>{{ subfield.label(class_="form-check-label mb-1") }}</td>
+                                </tr><br>
+                            {% endif %}
                         {% endfor %}
                     </div>
                     <div class="mb-3">

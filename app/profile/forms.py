@@ -6,10 +6,11 @@ from wtforms.validators import DataRequired, Email, EqualTo, Length, Regexp, Val
 
 validaion_messages = {
     'data': 'Поле обязательно для заполнения',
-    'incorrect email': 'Неверный формат электронной почты',
+    'length': 'Пароль должен содержать минимум 8 символов',
     'not equal': 'Пароли не совпадают',
     'incorrect password': 'Неверный формат пароля',
-    'length': 'Пароль должен содержать минимум 8 символов',
+    'incorrect email': 'Неверный формат электронной почты',
+    'incorrect phone': 'Неверный формат номера телефона',
     'email not available': 'Введенный адрес электронной почты уже используется',
     'phone not available': 'Введенный номер телефона уже используется'
 }
@@ -17,7 +18,7 @@ validaion_messages = {
 class InfoForm(FlaskForm):
     sex = RadioField('Пол', choices=['Мужской', 'Женский'], coerce=str)
     first_name = StringField('Имя', validators=[DataRequired(message=validaion_messages['data'])])
-    phone_number = TelField('Телефон', validators=[])
+    phone_number = TelField('Телефон')
     email = StringField('Email', validators=[Email(message=validaion_messages['incorrect email'])])
     submit_info = SubmitField('Сохранить')
 

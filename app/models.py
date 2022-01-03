@@ -22,3 +22,12 @@ class User(UserMixin, db.Model):
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+class MenuCategory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name_category = db.Column(db.String(20), unique=True)
+    order = db.Column(db.Integer)
+    path = db.Column(db.Unicode(128))
+
+    def __repr__(self):
+        return f'<Category {self.name_category}>'
