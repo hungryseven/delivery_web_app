@@ -12,7 +12,7 @@ migrate = Migrate()
 login = LoginManager()
 login.login_view = 'auth.login'
 login.login_message = 'Авторизуйтесь для доступа к данной странице'
-admin = Admin()
+admin = Admin(template_mode='bootstrap4')
 
 file_path = os.path.join(os.path.dirname(__file__), 'files')
 try:
@@ -21,7 +21,7 @@ except OSError:
     pass
 
 def create_app(config=Config):
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder='files')
     app.config.from_object(config)
 
     db.init_app(app)

@@ -12,6 +12,7 @@ validaion_messages = {
     'email not available': 'Введенный адрес электронной почты уже используется'
 }
 
+# Форма авторизации
 class LoginForm(FlaskForm):
     email = StringField(
         'Email', validators=[DataRequired(message=validaion_messages['data']),
@@ -20,6 +21,7 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Запомнить меня')
     submit = SubmitField('Войти')
 
+# Форма регистрации
 class RegisterForm(FlaskForm):
     first_name = StringField('Имя', validators=[DataRequired(message=validaion_messages['data'])])
     email = StringField(
@@ -34,6 +36,8 @@ class RegisterForm(FlaskForm):
                                         EqualTo('password', message=validaion_messages['not equal'])])
     submit = SubmitField('Зарегистрироваться')
 
+    # Функция-валидатор email'а при регистрации. Поднимает исключение,
+    # если пользователь с введенным email'ом уже зарегистрирован
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:

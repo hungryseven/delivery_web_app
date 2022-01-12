@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
 from app.models import User
-from wtforms import StringField, PasswordField, TelField, RadioField, SubmitField
+from wtforms import StringField, IntegerField, PasswordField, TelField, RadioField, SubmitField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, Regexp, ValidationError
 
 validaion_messages = {
@@ -15,6 +15,7 @@ validaion_messages = {
     'phone not available': 'Введенный номер телефона уже используется'
 }
 
+# Форма персональной информации в профиле
 class InfoForm(FlaskForm):
     sex = RadioField('Пол', choices=['Мужской', 'Женский'], coerce=str)
     first_name = StringField('Имя', validators=[DataRequired(message=validaion_messages['data'])])
@@ -22,16 +23,25 @@ class InfoForm(FlaskForm):
     email = StringField('Email', validators=[Email(message=validaion_messages['incorrect email'])])
     submit_info = SubmitField('Сохранить')
 
+    # Функция-валидатор номера телефона перед его изменением в профиле.
+    # Поднимает ошибку, если введенный номер уже используется, но
+    # пропускает текущий номер пользователя и пустую строку, если
+    # пользователь не хочет указывать номер телефона
     def validate_phone_number(self, phone_number):
         user = User.query.filter_by(phone_number=phone_number.data).first()
         if user is not None and user != current_user and phone_number.data != '':
             raise ValidationError(validaion_messages['phone not available'])
 
+    # Функция-валидатор email'а перед его изменением в профиле.
+    # Поднимает ошибку, если введенный email уже используется,
+    # но пропустит текущий email пользователя для удобства
+    # сохранения/обновления данных
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if user is not None and user != current_user:
             raise ValidationError(validaion_messages['email not available'])
 
+# Форма изменения пароля в профиле
 class PasswordForm(FlaskForm):
     current_password = PasswordField(
         'Текущий пароль', validators=[DataRequired(message=validaion_messages['data'])])
@@ -43,3 +53,19 @@ class PasswordForm(FlaskForm):
         'Повторите пароль', validators=[DataRequired(message=validaion_messages['data']),
                                         EqualTo('new_password', message=validaion_messages['not equal'])])
     submit_password = SubmitField('Сохранить')
+
+# Форма для добавления, редактирования и удаления адресов пользователей.
+# Атрибут 'address_id' необходим для скрытого поля в форме для того,
+# чтобы вытащить нужный адрес из БД для редактирования/удаления
+class AddressForm(FlaskForm):
+    address_id = IntegerField('ID адреса')
+    street = StringField('Улица', validators=[DataRequired(message=validaion_messages['data'])])
+    house = StringField('Дом', validators=[DataRequired(message=validaion_messages['data'])])
+    building = StringField('Корпус')
+    entrance = StringField('Подъезд')
+    floor = StringField('Этаж')
+    apartment = StringField('Квартира')
+    additional_info = StringField('Дополнительная информация')
+    submit_address = SubmitField('Сохранить')
+    edit_address = SubmitField('Сохранить')
+    delete_address = SubmitField('Удалить')

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block app_content %}
+    <div class="container">
+        <h3 class="mb-5">{{ category.name_category }}</h3>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4 g-4">
+            {% for food in category.foods.all() %}
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="/files/{{ food.path }}" class="card-img-top img-fluid" height="175">
+                        <div class="card-img-overlay">
+                            <a href="#">
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-title">{{ food.name_food }}</h6>
+                            {% if food.description %}
+                                <p class="card-text">{{ food.weight }} {{ food.measure }} - {{ food.description }}</p>
+                            {% else %}
+                                <p class="card-text">{{ food.weight }} {{ food.measure }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="card-footer bg-white border-0">
+                            <div class="row row-cols-2 row-cols-sm-1 row-cols-md-1 row-cols-lg-1 row-cols-xl-2">
+                                <div class="col">
+                                    <a href="#" class="btn btn-success rounded-pill">В корзину</a>
+                                </div>
+                                <div class="col">
+                                    <p class="card-text fs-5">{{ food.price }}.00 р.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

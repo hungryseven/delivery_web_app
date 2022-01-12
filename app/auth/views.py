@@ -6,6 +6,7 @@ from app.models import User
 from app.auth import bp
 from app.auth.forms import LoginForm, RegisterForm
 
+# Функция-представление страницы логина и авторизации пользователя
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -17,17 +18,25 @@ def login():
             flash('Неверный email или пароль')
             return redirect(url_for('auth.login'))
         login_user(user, remember=form.remember_me.data)
+        # Парсим URL на наличие 'next' аргумента строки запроса,
+        # чтобы пользователь после авторизации вернулся к желаемой
+        # странице, если она защищена от анонимного просмотра.
+        # Если у URL нет 'next' аргумента или аргумент 'next'
+        # включает в себя полный URL с именем домена, то происходит
+        # редирект на главную страницу
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('main.index')
         return redirect(next_page)
     return render_template('auth/login.html', title='Авторизация', form=form)
 
+# Функция-представление выхода из профиля
 @bp.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('main.index'))
 
+# Функция-представление страницы регистрации пользователя
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:

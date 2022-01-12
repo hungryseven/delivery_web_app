@@ -1,6 +1,8 @@
 from app import db, login
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_sqlalchemy import event
+from slugify import slugify
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -9,9 +11,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     phone_number = db.Column(db.String(11), index=True)
     password_hash = db.Column(db.String(128))
-
-    def __repr__(self):
-        return f'<User {self.first_name} {self.email}>'
+    addresses = db.relationship('Address', backref='user', lazy='dynamic')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -19,15 +19,60 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    def __repr__(self):
+        return f'Пользователь {self.first_name} {self.email}'
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
 
+class Address(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    street = db.Column(db.String(128))
+    house = db.Column(db.String(10))
+    building = db.Column(db.String(50))
+    entrance = db.Column(db.String(3))
+    floor = db.Column(db.String(3))
+    apartment = db.Column(db.String(5))
+    additional_info = db.Column(db.String(128))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def __repr__(self):
+        return f'Улица {self.street}, {self.house}{self.building}'
+
 class MenuCategory(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name_category = db.Column(db.String(20), unique=True)
+    slug = db.Column(db.String(255))
     order = db.Column(db.Integer)
     path = db.Column(db.Unicode(128))
+    foods = db.relationship('Food', backref='category', lazy='dynamic')
+
+    # Функция события, которая создает/обновляет значение поля 'slug'
+    # при создании/обновлении экземпляра класса MenuCategory
+    # на основе значения поля 'name_category'
+    @staticmethod
+    def slugify(target, value, oldvalue, initiator):
+        if value and (not target.slug or value != oldvalue):
+            target.slug = slugify(value)
 
     def __repr__(self):
-        return f'<Category {self.name_category}>'
+        return f'{self.name_category}'
+
+# Функция-регистратор события 
+event.listen(MenuCategory.name_category, 'set', MenuCategory.slugify, retval=False)
+
+AVAILABLE_MEASURE_TYPES = [(u'г', u'г'), (u'кг', u'кг'), (u'мл', u'мл'), (u'л', u'л')]
+
+class Food(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name_food = db.Column(db.String(50), unique=True, nullable=False)
+    description = db.Column(db.String(255))
+    weight = db.Column(db.Integer, nullable=False)
+    measure = db.Column(db.String(2), nullable=False)
+    price = db.Column(db.Integer, nullable=False)
+    path = db.Column(db.Unicode(128))
+    category_id = db.Column(db.Integer, db.ForeignKey('menu_category.id'), nullable=False)
+
+    def __repr__(self):
+        return f'{self.name_food}'
