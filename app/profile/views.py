@@ -1,10 +1,13 @@
-from sys import prefix
-from flask import redirect, url_for, render_template, flash, request
+from flask import redirect, url_for, render_template, flash, session
 from flask_login import current_user, login_required
 from app import db
-from app.models import Address
+from app.models import Address, Food
 from app.profile import bp
 from app.profile.forms import InfoForm, PasswordForm, AddressForm
+
+# TODO: Во многих представлениях используются обычные редиректы,
+# вместо которых лучше использовать AJAX. По мере изучения JS
+# добавлять скрипты.
 
 # Функция-представление страницы профиля с персональными данными
 @bp.route('/profile/info', methods=['GET', 'POST'])
@@ -33,13 +36,12 @@ def info():
     return render_template('profile/info.html', title='Персональные данные', info_form=info_form, password_form=password_form)
 
 # Функция-представление страницы профиля с адресами доставки
-# TODO: убрать редиректы и сделать все с помощью AJAX
 @bp.route('/profile/address', methods=['GET', 'POST'])
 @login_required
 def address():
+    address_form = AddressForm()
     # Так как на странице 3 события формы (добавление, редактирование, удаление),
     # то проверяем нажатие каждого и валидацию (кроме удаления) в отдельных условиях
-    address_form = AddressForm()
     if address_form.submit_address.data and address_form.validate():
         address_to_add = Address(
             street=address_form.street.data,
@@ -78,7 +80,24 @@ def address():
 @bp.route('/profile/favourites')
 @login_required
 def favourites():
-    return render_template('profile/favourites.html', title='Избранное')
+    favs = current_user.favs
+    return render_template('profile/favourites.html', title='Избранное', favs=favs)
+
+@bp.route('/profile/favourites/add/<food_id>')
+@login_required
+def add_to_favourites(food_id):
+    food = Food.query.get(food_id)
+    current_user.favs.append(food)
+    db.session.commit()
+    return redirect(url_for('menu.menu'))
+
+@bp.route('/profile/favourites/delete/<food_id>')
+@login_required
+def delete_from_favourites(food_id):
+    food = Food.query.get(food_id)
+    current_user.favs.remove(food)
+    db.session.commit()
+    return redirect(url_for('menu.menu'))
 
 # Функция-представление страницы профиля историей заказов
 @bp.route('/profile/orders')

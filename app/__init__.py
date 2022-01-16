@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_admin import Admin
+from flask_breadcrumbs import Breadcrumbs
 from config import Config
 
 db = SQLAlchemy()
@@ -13,6 +14,7 @@ login = LoginManager()
 login.login_view = 'auth.login'
 login.login_message = 'Авторизуйтесь для доступа к данной странице'
 admin = Admin(template_mode='bootstrap4')
+breadcrumbs = Breadcrumbs()
 
 file_path = os.path.join(os.path.dirname(__file__), 'files')
 try:
@@ -28,6 +30,7 @@ def create_app(config=Config):
     migrate.init_app(app, db)
     login.init_app(app)
     admin.init_app(app)
+    breadcrumbs.init_app(app)
 
     from app.main import bp as main_bp
     app.register_blueprint(main_bp)

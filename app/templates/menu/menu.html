@@ -2,12 +2,13 @@
 
 {% block app_content %}
     <div class="container">
+        {% include '_breadcrumb.html' %}
         <h3 class="mb-5">Меню</h3>
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4 g-4">
             {% for category in categories %}
                 <div class="col">
                     <div class="card h-100">
-                        <img src="/files/{{ category.path }}" class="card-img-top img-fluid">
+                        <img src="/files/{{ category.path }}" class="card-img-top img-fluid" alt="category.name_category">
                         <div class="card-body">
                             <a href="{{ url_for('menu.food_category', food_category=category.slug) }}" class="stretched-link"></a>
                         </div>

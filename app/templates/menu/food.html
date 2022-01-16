@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block app_content %}
+    <div class="container">
+        <div class="card mb-3">
+            <div class="row g-0">
+                <div class="col-md-5">
+                    <img src="/files/{{ food.path }}" class="img-fluid rounded-start" alt="{{ food.name_food }}" title="{{ food.name_food }}">
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body mb-3">
+                        <h2 class="card-title">{{ food.name_food }}</h2>
+                        <p class="card-text text-muted">{{ food.weight }} {{ food.measure }}</p>
+                        {% if food.description %}
+                            <p class="card-text">{{ food.description.capitalize() }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <a href="#" class="btn btn-success btn-lg rounded-pill">В корзину</a>
+                        </div>
+                        <div class="col-4">
+                            <p class="card-text fs-4">{{ food.price }}.00 р.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

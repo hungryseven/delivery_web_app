@@ -7,11 +7,9 @@
             {% for food in category.foods.all() %}
                 <div class="col">
                     <div class="card h-100">
-                        <img src="/files/{{ food.path }}" class="card-img-top img-fluid" height="175">
-                        <div class="card-img-overlay">
-                            <a href="#">
-                            </a>
-                        </div>
+                        <a href="{{ url_for('menu.food', food_category=category.slug, food=food.slug) }}">
+                            <img src="/files/{{ food.path }}" class="card-img-top img-fluid" alt="{{ food.name_food }}" title="{{ food.name_food }}">
+                        </a>
                         <div class="card-body">
                             <h6 class="card-title">{{ food.name_food }}</h6>
                             {% if food.description %}
@@ -21,13 +19,18 @@
                             {% endif %}
                         </div>
                         <div class="card-footer bg-white border-0">
-                            <div class="row row-cols-2 row-cols-sm-1 row-cols-md-1 row-cols-lg-1 row-cols-xl-2">
-                                <div class="col">
-                                    <a href="#" class="btn btn-success rounded-pill">В корзину</a>
-                                </div>
-                                <div class="col">
-                                    <p class="card-text fs-5">{{ food.price }}.00 р.</p>
-                                </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="#" class="btn btn-outline-success btn-sm">В корзину</a>
+                                {% if food not in current_user.favs %}
+                                    <a href="{{ url_for('profile.add_to_favourites', food_id=food.id) }}" class="btn btn-outline-danger btn-sm">
+                                        <i class="bi bi-heart" style="color: red;"></i>
+                                    </a>
+                                {% else %}
+                                    <a href="{{ url_for('profile.delete_from_favourites', food_id=food.id) }}" class="btn btn-outline-danger btn-sm">
+                                        <i class="bi bi-heart-fill" style="color: red;"></i>
+                                    </a>
+                                {% endif %}
+                                <p class="card-text fs-6">{{ food.price }}.00 р.</p>
                             </div>
                         </div>
                     </div>

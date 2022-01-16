@@ -4,6 +4,7 @@ from flask import url_for
 from flask_admin import form
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.form.upload import ImageUploadField
+from flask_admin.contrib.sqla.filters import FilterEqual
 from markupsafe import Markup
 
 def list_thumbnail(view, context, model, name):
@@ -13,46 +14,76 @@ def list_thumbnail(view, context, model, name):
                                                  filename=form.thumbgen_filename(model.path)))
 
 class UserView(ModelView):
-    column_labels = dict(first_name='Имя', phone_number='Номер телефона')
-    column_exclude_list = ('password_hash', 'sex')
-    column_searchable_list = ('email', 'phone_number')
     can_create = False
     can_edit = False
     can_delete = False
+    column_labels = dict(
+        first_name='Имя',
+        phone_number='Номер телефона'
+    )
+    column_filters = (
+        'phone_number',
+        'email'
+    )
+    column_exclude_list = ('password_hash', 'sex')
+    column_searchable_list = ('email', 'phone_number')
 
 class MenuCategoryView(ModelView):
-    column_labels = dict(name_category='Наименование категории', slug='URL адрес', order='Приоритет', path='Изображение')
+    column_labels = dict(
+        name_category='Наименование категории',
+        slug='URL адрес',
+        order='Приоритет',
+        path='Изображение'
+    )
     column_editable_list = ('name_category', 'slug', 'order')
     column_default_sort = 'order'
-    form_excluded_columns = ('foods', 'slug')
-
     column_formatters = {
         'path': list_thumbnail
     }
 
+    form_excluded_columns = ('foods', 'slug')
     form_extra_fields = {
         'path': ImageUploadField('Изображение', base_path=file_path, thumbnail_size=(100, 100, True))
     }
 
 class FoodView(ModelView):
+    can_view_details = True
     column_labels = dict(
         name_food='Наименование позиции',
+        slug='URL адрес',
         description='Описание/Ингредиенты',
         weight='Вес/Объем',
         measure='Единица измерения',
         price='Цена',
         path='Изображение',
         category='Категория'
-        )
-
-    form_choices = {
-        'measure': AVAILABLE_MEASURE_TYPES
-    }
-
+    )
+    column_editable_list = (
+        'name_food',
+        'slug',
+        'description',
+        'weight',
+        'measure',
+        'price',
+        'category'
+    )
+    column_searchable_list = (
+        'name_food',
+    )
+    column_default_sort = [('category_id', False), ('name_food', False)]
+    column_filters = (
+        'name_food',
+        'description',
+        FilterEqual(column=MenuCategory.name_category, name='Категория')
+    )
     column_formatters = {
         'path': list_thumbnail
     }
 
+    form_excluded_columns = ('slug')
+    form_choices = {
+        'measure': AVAILABLE_MEASURE_TYPES
+    }
     form_extra_fields = {
         'path': ImageUploadField('Изображение', base_path=file_path, thumbnail_size=(100, 100, True))
     }
