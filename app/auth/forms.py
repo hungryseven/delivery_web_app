@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
 from app.models import User
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TelField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, Regexp, ValidationError
+from app.auth.phone_verification import parse_phone_number
 
 validaion_messages = {
     'data': 'Поле обязательно для заполнения',
@@ -9,24 +10,20 @@ validaion_messages = {
     'not equal': 'Пароли не совпадают',
     'incorrect password': 'Неверный формат пароля',
     'length': 'Пароль должен содержать минимум 8 символов',
-    'email not available': 'Введенный адрес электронной почты уже используется'
+    'phone not available': 'Введенный номер телефона уже используется'
 }
 
 # Форма авторизации
 class LoginForm(FlaskForm):
-    email = StringField(
-        'Email', validators=[DataRequired(message=validaion_messages['data']),
-                            Email(message=validaion_messages['incorrect email'])])
+    phone_number = TelField('Номер телефона', validators=[DataRequired(message=validaion_messages['data'])])
     password = PasswordField('Пароль', validators=[DataRequired(message=validaion_messages['data'])])
     remember_me = BooleanField('Запомнить меня')
-    submit = SubmitField('Войти')
+    submit_login = SubmitField('Войти')
 
 # Форма регистрации
 class RegisterForm(FlaskForm):
     first_name = StringField('Имя', validators=[DataRequired(message=validaion_messages['data'])])
-    email = StringField(
-        'Email', validators=[DataRequired(message=validaion_messages['data']),
-                            Email(message=validaion_messages['incorrect email'])])
+    phone_number = TelField('Номер телефона', validators=[DataRequired(message=validaion_messages['data'])])
     password = PasswordField(
         'Пароль', validators=[DataRequired(message=validaion_messages['data']),
                             Length(min=8, max=20, message=validaion_messages['length']),
@@ -34,11 +31,16 @@ class RegisterForm(FlaskForm):
     password2 = PasswordField(
         'Повторите пароль', validators=[DataRequired(message=validaion_messages['data']),
                                         EqualTo('password', message=validaion_messages['not equal'])])
-    submit = SubmitField('Зарегистрироваться')
+    submit_register = SubmitField('Зарегистрироваться')
 
-    # Функция-валидатор email'а при регистрации. Поднимает исключение,
-    # если пользователь с введенным email'ом уже зарегистрирован
-    def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
+    # Функция-валидатор номера телефона при регистрации. Поднимает исключение,
+    # если пользователь с введенным номером телефона уже зарегистрирован
+    def validate_phone_number(self, phone_number):
+        phone_number = parse_phone_number(phone_number.data)[2:]
+        user = User.query.filter_by(phone_number=phone_number).first()
         if user is not None:
-            raise ValidationError(validaion_messages['email not available'])
+            raise ValidationError(validaion_messages['phone not available'])
+
+class VerificationForm(FlaskForm):
+    code = StringField('Код', validators=[DataRequired(message=validaion_messages['data'])])
+    submit_code = SubmitField('Подтвердить')

@@ -9,15 +9,15 @@
                 <form action="" method="post" novalidate>
                     {{ form.hidden_tag() }}
                     <div class="form-floating mb-3">
-                        {{ form.email(class_="form-control", id="floatingInput", placeholder="name@example.com") }}
-                        {{ form.email.label(for="floatingInput") }}
-                        {% for error in form.email.errors %}
+                        {{ form.phone_number(class_="form-control", id="floatingInputPhone", placeholder="89001234567") }}
+                        {{ form.phone_number.label(for="floatingInputPhone") }}
+                        {% for error in form.phone_number.errors %}
                             <span style="color: red;">{{ error }}</span>
                         {% endfor %}
                     </div>
                     <div class="form-floating mb-3">
-                        {{ form.password(class_="form-control", id="floatingInput", placeholder="Пароль") }}
-                        {{ form.password.label(for="floatingInput") }}
+                        {{ form.password(class_="form-control", id="floatingInputPassword", placeholder="Пароль") }}
+                        {{ form.password.label(for="floatingInputPassword") }}
                         {% for error in form.password.errors %}
                             <span style="color: red;">{{ error }}</span>
                         {% endfor %}
@@ -27,7 +27,7 @@
                         {{ form.remember_me.label(class_="form-check-label", for="Check") }}
                     </div>
                     <div class="mb-3">
-                        {{ form.submit(class_="btn btn-primary btn-lg w-100") }}
+                        {{ form.submit_login(class_="btn btn-primary btn-lg w-100") }}
                     </div>
                 </form>
                 <div class="mb-3 text-center">
@@ -40,4 +40,9 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function(){
+            $("#floatingInputPhone").inputmask({"mask": "+7 999 999-99-99"});
+        });
+    </script>
 {% endblock %}

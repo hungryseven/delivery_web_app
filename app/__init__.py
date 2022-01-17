@@ -23,7 +23,7 @@ except OSError:
     pass
 
 def create_app(config=Config):
-    app = Flask(__name__, static_folder='files')
+    app = Flask(__name__, static_folder='static')
     app.config.from_object(config)
 
     db.init_app(app)
@@ -36,10 +36,10 @@ def create_app(config=Config):
     app.register_blueprint(main_bp)
 
     from app.auth import bp as auth_bp
-    app.register_blueprint(auth_bp)
+    app.register_blueprint(auth_bp, url_prefix='/auth')
 
     from app.profile import bp as profile_bp
-    app.register_blueprint(profile_bp)
+    app.register_blueprint(profile_bp, url_prefix='/profile')
 
     from app.menu import bp as menu_bp
     app.register_blueprint(menu_bp)

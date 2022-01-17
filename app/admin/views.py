@@ -11,7 +11,7 @@ def list_thumbnail(view, context, model, name):
     if not model.path:
         return ''
     return Markup('<img src="%s">' % url_for('static',
-                                                 filename=form.thumbgen_filename(model.path)))
+                                                 filename='food_images/'f'{form.thumbgen_filename(model.path)}'))
 
 class UserView(ModelView):
     can_create = False

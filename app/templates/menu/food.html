@@ -5,7 +5,7 @@
         <div class="card mb-3">
             <div class="row g-0">
                 <div class="col-md-5">
-                    <img src="/files/{{ food.path }}" class="img-fluid rounded-start" alt="{{ food.name_food }}" title="{{ food.name_food }}">
+                    <img src="/static/food_images/{{ food.path }}" class="img-fluid rounded-start" alt="{{ food.name_food }}" title="{{ food.name_food }}">
                 </div>
                 <div class="col-md-7">
                     <div class="card-body mb-3">
@@ -15,12 +15,19 @@
                             <p class="card-text">{{ food.description.capitalize() }}</p>
                         {% endif %}
                     </div>
-                    <div class="row">
-                        <div class="col-3">
-                            <a href="#" class="btn btn-success btn-lg rounded-pill">В корзину</a>
-                        </div>
-                        <div class="col-4">
-                            <p class="card-text fs-4">{{ food.price }}.00 р.</p>
+                    <div class="card-footer bg-white border-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="#" class="btn btn-outline-success">В корзину</a>
+                            {% if food not in current_user.favs %}
+                                <a href="{{ url_for('profile.add_to_favourites', food_id=food.id, next=request.url) }}" class="btn btn-outline-danger">
+                                    <i class="bi bi-heart" style="color: red;"></i>
+                                </a>
+                            {% else %}
+                                <a href="{{ url_for('profile.delete_from_favourites', food_id=food.id, next=request.url) }}" class="btn btn-outline-danger">
+                                    <i class="bi bi-heart-fill" style="color: red;"></i>
+                                </a>
+                            {% endif %}
+                            <p class="card-text fs-5">{{ food.price }}.00 р.</p>
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,3 @@
-from enum import unique
 from app import db, login
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -27,7 +26,7 @@ class User(UserMixin, db.Model):
     first_name = db.Column(db.String(25))
     sex = db.Column(db.String(7))
     email = db.Column(db.String(120), index=True, unique=True)
-    phone_number = db.Column(db.String(11), index=True)
+    phone_number = db.Column(db.String(11), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     addresses = db.relationship('Address', backref='user', lazy='dynamic')
     favs = db.relationship('Food', secondary=user_food, backref=db.backref('users', lazy='dynamic'))
@@ -39,7 +38,7 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        return f'Пользователь {self.first_name} {self.email}'
+        return f'Пользователь {self.first_name} {self.phone_number}'
 
 @login.user_loader
 def load_user(id):

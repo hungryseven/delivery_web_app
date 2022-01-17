@@ -23,22 +23,13 @@ class InfoForm(FlaskForm):
     email = StringField('Email', validators=[Email(message=validaion_messages['incorrect email'])])
     submit_info = SubmitField('Сохранить')
 
-    # Функция-валидатор номера телефона перед его изменением в профиле.
-    # Поднимает ошибку, если введенный номер уже используется, но
-    # пропускает текущий номер пользователя и пустую строку, если
-    # пользователь не хочет указывать номер телефона
-    def validate_phone_number(self, phone_number):
-        user = User.query.filter_by(phone_number=phone_number.data).first()
-        if user is not None and user != current_user and phone_number.data != '':
-            raise ValidationError(validaion_messages['phone not available'])
-
     # Функция-валидатор email'а перед его изменением в профиле.
     # Поднимает ошибку, если введенный email уже используется,
     # но пропустит текущий email пользователя для удобства
     # сохранения/обновления данных
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
-        if user is not None and user != current_user:
+        if user is not None and user != current_user and current_user.email != '':
             raise ValidationError(validaion_messages['email not available'])
 
 # Форма изменения пароля в профиле
