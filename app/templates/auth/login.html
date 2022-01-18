@@ -7,31 +7,31 @@
             <div class="col-12 col-md-6 col-lg-4 col-xl-4">
                 <h4 class="mb-4 text-center">Авторизация</h4>
                 <form action="" method="post" novalidate>
-                    {{ form.hidden_tag() }}
+                    {{ login_form.hidden_tag() }}
                     <div class="form-floating mb-3">
-                        {{ form.phone_number(class_="form-control", id="floatingInputPhone", placeholder="89001234567") }}
-                        {{ form.phone_number.label(for="floatingInputPhone") }}
-                        {% for error in form.phone_number.errors %}
+                        {{ login_form.phone_number(class_="form-control", id="floatingInputPhone", placeholder="89001234567") }}
+                        {{ login_form.phone_number.label(for="floatingInputPhone") }}
+                        {% for error in login_form.phone_number.errors %}
                             <span style="color: red;">{{ error }}</span>
                         {% endfor %}
                     </div>
                     <div class="form-floating mb-3">
-                        {{ form.password(class_="form-control", id="floatingInputPassword", placeholder="Пароль") }}
-                        {{ form.password.label(for="floatingInputPassword") }}
-                        {% for error in form.password.errors %}
+                        {{ login_form.password(class_="form-control", id="floatingInputPassword", placeholder="Пароль") }}
+                        {{ login_form.password.label(for="floatingInputPassword") }}
+                        {% for error in login_form.password.errors %}
                             <span style="color: red;">{{ error }}</span>
                         {% endfor %}
                     </div>
                     <div class="mb-3 form-check">
-                        {{ form.remember_me(class_="form-check-input", id="Check") }}
-                        {{ form.remember_me.label(class_="form-check-label", for="Check") }}
+                        {{ login_form.remember_me(class_="form-check-input", id="Check") }}
+                        {{ login_form.remember_me.label(class_="form-check-label", for="Check") }}
                     </div>
                     <div class="mb-3">
-                        {{ form.submit_login(class_="btn btn-primary btn-lg w-100") }}
+                        {{ login_form.submit_login(class_="btn btn-primary btn-lg w-100") }}
                     </div>
                 </form>
                 <div class="mb-3 text-center">
-                    <p><a href="#" class="text-decoration-none">Забыли пароль?</a></p>
+                    <p><a href="" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#PhoneModal">Забыли пароль?</a></p>
                     <p>
                         Впервые у нас?
                         <a href="{{ url_for('auth.register') }}" class="text-decoration-none">Зарегистрироваться</a>
@@ -39,10 +39,37 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="PhoneModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
+                <div class="modal-content">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title" id="ModalLabel">Восстановление пароля</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" method="post" novalidate>
+                            {{ request_form.hidden_tag() }}
+                            <div class="mb-3">
+                                {{ request_form.phone_number.label(class_="form-label", for="InputPhone") }}
+                                {{ request_form.phone_number(class_="form-control", id="InputPhone") }}
+                                {% for error in request_form.phone_number.errors %}
+                                    <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="modal-footer border-0">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                {{ request_form.submit_phone_number(class_="btn btn-primary") }}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <script>
         $(document).ready(function(){
             $("#floatingInputPhone").inputmask({"mask": "+7 999 999-99-99"});
+            $("#InputPhone").inputmask({"mask": "+7 999 999-99-99"});
         });
     </script>
 {% endblock %}

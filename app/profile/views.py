@@ -1,9 +1,10 @@
-from flask import redirect, url_for, render_template, flash, request
+from flask import redirect, url_for, render_template, flash, request, session
 from flask_login import current_user, login_required
 from app import db
 from app.models import Address, Food
 from app.profile import bp
 from app.profile.forms import InfoForm, PasswordForm, AddressForm
+from app.auth.phone_verification import request_verification_token, parse_phone_number
 
 # TODO: Во многих представлениях используются обычные редиректы,
 # вместо которых лучше использовать AJAX. По мере изучения JS
@@ -33,6 +34,17 @@ def info():
         flash('Пароль успешно изменен')
         return redirect(url_for('profile.info'))
     return render_template('profile/info.html', title='Персональные данные', info_form=info_form, password_form=password_form)
+
+# Функция-представление восстановления пароля внутри профиля.
+# Параметр 'prev' необходим для возврата на страницу профиля
+# после восстановления пароля
+@bp.route('/reset_password')
+@login_required
+def reset_password():
+    phone_number = '+7' + current_user.phone_number
+    session['phone_number'] = phone_number
+    request_verification_token(phone_number)
+    return redirect(url_for('auth.verify', next='reset_password_verify', prev=url_for('profile.info')))
 
 # Функция-представление страницы профиля с адресами доставки
 @bp.route('/address', methods=['GET', 'POST'])
@@ -82,22 +94,27 @@ def favourites():
     favs = current_user.favs
     return render_template('profile/favourites.html', title='Избранное', favs=favs)
 
+# Функция-представление добавления в избранное
 @bp.route('/favourites/add/<food_id>')
 @login_required
 def add_to_favourites(food_id):
     food = Food.query.get(food_id)
     current_user.favs.append(food)
     db.session.commit()
+    # Переменная 'next_page' перенаправит обратно на ту страницу,
+    # откуда произошло добавление в избранное
     next_page = request.args.get('next')
-    print(next_page)
     return redirect(next_page)
 
+# Функция-представление удаления из избранного
 @bp.route('/favourites/delete/<food_id>')
 @login_required
 def delete_from_favourites(food_id):
     food = Food.query.get(food_id)
     current_user.favs.remove(food)
     db.session.commit()
+    # Переменная 'next_page' перенаправит обратно на ту страницу,
+    # откуда произошло удаление из избранного
     next_page = request.args.get('next')
     return redirect(next_page)
 

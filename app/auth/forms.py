@@ -13,14 +13,14 @@ validaion_messages = {
     'phone not available': 'Введенный номер телефона уже используется'
 }
 
-# Форма авторизации
+# Форма для авторизации
 class LoginForm(FlaskForm):
     phone_number = TelField('Номер телефона', validators=[DataRequired(message=validaion_messages['data'])])
     password = PasswordField('Пароль', validators=[DataRequired(message=validaion_messages['data'])])
     remember_me = BooleanField('Запомнить меня')
     submit_login = SubmitField('Войти')
 
-# Форма регистрации
+# Форма для регистрации
 class RegisterForm(FlaskForm):
     first_name = StringField('Имя', validators=[DataRequired(message=validaion_messages['data'])])
     phone_number = TelField('Номер телефона', validators=[DataRequired(message=validaion_messages['data'])])
@@ -41,6 +41,25 @@ class RegisterForm(FlaskForm):
         if user is not None:
             raise ValidationError(validaion_messages['phone not available'])
 
+# Форма для подтверждения номера телефона
 class VerificationForm(FlaskForm):
     code = StringField('Код', validators=[DataRequired(message=validaion_messages['data'])])
     submit_code = SubmitField('Подтвердить')
+
+# Форма запроса номера телефона для восстановления пароля
+class PhoneRequestForm(FlaskForm):
+    phone_number = TelField('Номер телефона', validators=[DataRequired(message=validaion_messages['data'])])
+    submit_phone_number = SubmitField('Отправить код')
+
+# Форма для восстановления пароля
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField(
+        'Пароль', validators=[DataRequired(message=validaion_messages['data']),
+                            Length(min=8, max=20, message=validaion_messages['length']),
+                            Regexp('^(?=.*[0-9])(?=.*[a-zA-Z])(?=\S+$).{1,}$', message=validaion_messages['incorrect password'])])
+    password2 = PasswordField(
+        'Повторите пароль', validators=[DataRequired(message=validaion_messages['data']),
+                                        EqualTo('password', message=validaion_messages['not equal'])])
+    submit_password = SubmitField('Сохранить')
+
+

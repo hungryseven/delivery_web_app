@@ -10,7 +10,7 @@
                     <div class="col">
                         <div class="card h-100">
                             <a href="{{ url_for('menu.food', food_category=food.category.slug, food=food.slug) }}">
-                                <img src="/files/{{ food.path }}" class="card-img-top img-fluid" alt="{{ food.name_food }}" title="{{ food.name_food }}">
+                                <img src="/static/food_images/{{ food.path }}" class="card-img-top img-fluid" alt="{{ food.name_food }}" title="{{ food.name_food }}">
                             </a>
                             <div class="card-body">
                                 <h6 class="card-title">{{ food.name_food }}</h6>
@@ -24,11 +24,11 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <a href="#" class="btn btn-outline-success btn-sm">В корзину</a>
                                     {% if food not in current_user.favs %}
-                                        <a href="{{ url_for('profile.add_to_favourites', food_id=food.id) }}" class="btn btn-outline-danger btn-sm">
+                                        <a href="{{ url_for('profile.add_to_favourites', food_id=food.id, next=request.url) }}" class="btn btn-outline-danger btn-sm">
                                             <i class="bi bi-heart" style="color: red;"></i>
                                         </a>
                                     {% else %}
-                                        <a href="{{ url_for('profile.delete_from_favourites', food_id=food.id) }}" class="btn btn-outline-danger btn-sm">
+                                        <a href="{{ url_for('profile.delete_from_favourites', food_id=food.id, next=request.url) }}" class="btn btn-outline-danger btn-sm">
                                             <i class="bi bi-heart-fill" style="color: red;"></i>
                                         </a>
                                     {% endif %}

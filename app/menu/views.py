@@ -1,5 +1,5 @@
 from turtle import title
-from flask import render_template, redirect, url_for
+from flask import render_template
 from app.menu import bp
 from app.main import bp as main_bp
 from app.models import MenuCategory, Food
