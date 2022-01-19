@@ -1,0 +1,6 @@
+<div class="breadcrumbs container mb-5">
+    {% for breadcrumb in breadcrumbs %}
+        <a class="px-1 link-dark text-decoration-none" href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
+        {{ '/' if not loop.last }}
+    {% endfor %}
+</div>

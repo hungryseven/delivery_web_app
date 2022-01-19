@@ -3,12 +3,12 @@ from flask_login import login_user, logout_user, current_user
 from werkzeug.urls import url_parse
 from app import db
 from app.models import User
-from app.auth import bp
+from app.auth import bp as auth_bp
 from app.auth.forms import LoginForm, RegisterForm, VerificationForm, PhoneRequestForm, ResetPasswordForm
 from app.auth.phone_verification import request_verification_token, check_verification_token, parse_phone_number
 
 # Функция-представление страницы логина и авторизации пользователя
-@bp.route('/login', methods=['GET', 'POST'])
+@auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
@@ -39,13 +39,13 @@ def login():
     return render_template('auth/login.html', title='Авторизация', login_form=login_form, request_form=request_form)
 
 # Функция-представление выхода из профиля
-@bp.route('/logout')
+@auth_bp.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('main.index'))
 
 # Функция-представление страницы регистрации пользователя
-@bp.route('/register', methods=['GET', 'POST'])
+@auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
@@ -61,7 +61,7 @@ def register():
 
 # Функция-представление страницы подтверждения номера телефона
 # при регистрации/восстановлении пароля
-@bp.route('/verify', methods=['GET', 'POST'])
+@auth_bp.route('/verify', methods=['GET', 'POST'])
 def verify():
     verification_form = VerificationForm()
     # Условие выполнится, если код подтверждения будет запрашиваться
@@ -91,7 +91,7 @@ def verify():
     return render_template('auth/phone_verification.html', title='Подтверждение номера телефона', verification_form=verification_form)
 
 # Функция-представление страницы восстановления пароля
-@bp.route('/reset_password', methods=['GET', 'POST'])
+@auth_bp.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
     reset_form = ResetPasswordForm()
     if reset_form.validate_on_submit():

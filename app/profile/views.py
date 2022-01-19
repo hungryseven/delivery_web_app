@@ -2,7 +2,7 @@ from flask import redirect, url_for, render_template, flash, request, session
 from flask_login import current_user, login_required
 from app import db
 from app.models import Address, Food
-from app.profile import bp
+from app.profile import bp as profile_bp
 from app.profile.forms import InfoForm, PasswordForm, AddressForm
 from app.auth.phone_verification import request_verification_token, parse_phone_number
 
@@ -11,7 +11,7 @@ from app.auth.phone_verification import request_verification_token, parse_phone_
 # добавлять скрипты.
 
 # Функция-представление страницы профиля с персональными данными
-@bp.route('/info', methods=['GET', 'POST'])
+@profile_bp.route('/info', methods=['GET', 'POST'])
 @login_required
 def info():
     info_form = InfoForm()
@@ -38,7 +38,7 @@ def info():
 # Функция-представление восстановления пароля внутри профиля.
 # Параметр 'prev' необходим для возврата на страницу профиля
 # после восстановления пароля
-@bp.route('/reset_password')
+@profile_bp.route('/reset_password')
 @login_required
 def reset_password():
     phone_number = '+7' + current_user.phone_number
@@ -47,7 +47,7 @@ def reset_password():
     return redirect(url_for('auth.verify', next='reset_password_verify', prev=url_for('profile.info')))
 
 # Функция-представление страницы профиля с адресами доставки
-@bp.route('/address', methods=['GET', 'POST'])
+@profile_bp.route('/address', methods=['GET', 'POST'])
 @login_required
 def address():
     address_form = AddressForm()
@@ -88,14 +88,14 @@ def address():
     return render_template('profile/address.html', title='Адрес доставки', address_form=address_form)
 
 # Функция-представление страницы профиля с избранными позициями
-@bp.route('/favourites')
+@profile_bp.route('/favourites')
 @login_required
 def favourites():
     favs = current_user.favs
     return render_template('profile/favourites.html', title='Избранное', favs=favs)
 
 # Функция-представление добавления в избранное
-@bp.route('/favourites/add/<food_id>')
+@profile_bp.route('/favourites/add/<food_id>')
 @login_required
 def add_to_favourites(food_id):
     food = Food.query.get(food_id)
@@ -107,7 +107,7 @@ def add_to_favourites(food_id):
     return redirect(next_page)
 
 # Функция-представление удаления из избранного
-@bp.route('/favourites/delete/<food_id>')
+@profile_bp.route('/favourites/delete/<food_id>')
 @login_required
 def delete_from_favourites(food_id):
     food = Food.query.get(food_id)
@@ -119,7 +119,7 @@ def delete_from_favourites(food_id):
     return redirect(next_page)
 
 # Функция-представление страницы профиля историей заказов
-@bp.route('/profile/orders')
+@profile_bp.route('/profile/orders')
 @login_required
 def orders():
     return render_template('profile/orders.html', title='История заказов')

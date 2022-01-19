@@ -42,7 +42,10 @@ def create_app(config=Config):
     app.register_blueprint(profile_bp, url_prefix='/profile')
 
     from app.menu import bp as menu_bp
-    app.register_blueprint(menu_bp)
+    app.register_blueprint(menu_bp, url_prefix='/menu')
+    
+    from app.cart import bp as cart_bp
+    app.register_blueprint(cart_bp, url_prefix='/cart')
 
     from app.admin import bp as admin_bp
     app.register_blueprint(admin_bp)
