@@ -1,4 +1,4 @@
-from flask import redirect, url_for, render_template, flash, request, session
+from flask import jsonify, redirect, url_for, render_template, flash, request, session
 from flask_login import current_user, login_required
 from app import db
 from app.models import Address, Food
@@ -94,29 +94,41 @@ def favourites():
     favs = current_user.favs
     return render_template('profile/favourites.html', title='Избранное', favs=favs)
 
-# Функция-представление добавления в избранное
-@profile_bp.route('/favourites/add/<food_id>')
+# Функция-представление добавления позиции/товара в избранное.
+# Если товара с таким id не существует, то выкинет 404 ошибку.
+# Если товар УЖЕ находится в избранном и его пытаются добавить, то вернет JSON с ошибкой
+@profile_bp.route('/favourites/add')
 @login_required
-def add_to_favourites(food_id):
-    food = Food.query.get(food_id)
+def add_to_favourites():
+    food_id = request.args.get('id')
+    food = Food.query.get_or_404(food_id)
+    if food in current_user.favs:
+        return jsonify({'id': food.id, 'result': 'error'})
     current_user.favs.append(food)
     db.session.commit()
-    # Переменная 'next_page' перенаправит обратно на ту страницу,
-    # откуда произошло добавление в избранное
-    next_page = request.args.get('next')
-    return redirect(next_page)
+    return jsonify({'id': food.id, 'result': 'success'})
 
-# Функция-представление удаления из избранного
-@profile_bp.route('/favourites/delete/<food_id>')
+# Функция-представление удаления позиции/товара из избранного.
+# Если товара с таким id не существует, то выкинет 404 ошибку.
+# Если товара НЕТ в избранном и его пытаются удалить, то вернет JSON с ошибкой
+@profile_bp.route('/favourites/delete')
 @login_required
-def delete_from_favourites(food_id):
-    food = Food.query.get(food_id)
+def delete_from_favourites():
+    food_id = request.args.get('id')
+    food = Food.query.get_or_404(food_id)
+    if food not in current_user.favs:
+        return jsonify({'id': food.id, 'result': 'error'})
     current_user.favs.remove(food)
     db.session.commit()
-    # Переменная 'next_page' перенаправит обратно на ту страницу,
-    # откуда произошло удаление из избранного
-    next_page = request.args.get('next')
-    return redirect(next_page)
+    return jsonify({'id': food.id, 'result': 'success'})
+
+# Функция-представление, возвращающая JSON с id товаров/позиций,
+# которые есть в избранном у пользователя
+@profile_bp.route('/favourites/api')
+@login_required
+def get_user_favourites():
+    user_favourites = [food.id for food in current_user.favs]
+    return jsonify(user_favourites)
 
 # Функция-представление страницы профиля историей заказов
 @profile_bp.route('/profile/orders')

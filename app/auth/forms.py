@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from app.models import User
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TelField
-from wtforms.validators import DataRequired, Email, EqualTo, Length, Regexp, ValidationError
+from wtforms.validators import DataRequired, EqualTo, Length, Regexp, ValidationError
 from app.auth.phone_verification import parse_phone_number
 
 validaion_messages = {

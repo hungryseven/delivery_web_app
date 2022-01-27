@@ -1,11 +1,14 @@
+from datetime import datetime
 from app import db, admin, file_path
 from app.models import AVAILABLE_MEASURE_TYPES, Food, User, MenuCategory
 from flask import url_for
 from flask_admin import form
+from flask_admin.model import typefmt
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.form.upload import ImageUploadField
 from flask_admin.contrib.sqla.filters import FilterEqual
 from markupsafe import Markup
+from datetime import date
 
 def list_thumbnail(view, context, model, name):
     if not model.path:
@@ -13,20 +16,32 @@ def list_thumbnail(view, context, model, name):
     return Markup('<img src="%s">' % url_for('static',
                                                  filename='food_images/'f'{form.thumbgen_filename(model.path)}'))
 
+def date_format(view, value):
+    return value.strftime("%d.%m.%Y")
+
+MY_DEFAULT_FORMATTERS = dict(typefmt.BASE_FORMATTERS)
+MY_DEFAULT_FORMATTERS.update({
+        date: date_format
+    })
+
 class UserView(ModelView):
     can_create = False
     can_edit = False
     can_delete = False
     column_labels = dict(
         first_name='Имя',
-        phone_number='Номер телефона'
+        phone_number='Номер телефона',
+        sex='Пол',
+        registration_date='Дата регистрации'
     )
     column_filters = (
         'phone_number',
         'email'
     )
-    column_exclude_list = ('password_hash', 'sex')
+    column_exclude_list = ('password_hash')
     column_searchable_list = ('email', 'phone_number')
+
+    column_type_formatters = MY_DEFAULT_FORMATTERS
 
 class MenuCategoryView(ModelView):
     column_labels = dict(

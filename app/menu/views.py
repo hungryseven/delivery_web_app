@@ -32,7 +32,6 @@ def food_category(food_category):
 # Функция для определения текущей позиции еды/товара,
 # которая будет отображаться в "хлебных крошках"
 def view_food_dlc(*args, **kwargs):
-    print(request.view_args)
     food_slug = request.view_args['food']
     food = Food.query.filter_by(slug=food_slug).first()
     category = food.category
@@ -43,5 +42,4 @@ def view_food_dlc(*args, **kwargs):
 @register_breadcrumb(menu_bp, '.food_category.food', '', dynamic_list_constructor=view_food_dlc)
 def food(food_category, food):
     food = Food.query.filter_by(slug=food).first()
-    print(food.name_food, food.slug, food.category)
     return render_template('menu/food.html', title=f'{food.name_food}', food=food)

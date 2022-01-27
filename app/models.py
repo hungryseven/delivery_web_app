@@ -1,13 +1,14 @@
 from app import db, login
 from flask_login import UserMixin
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import event
+from werkzeug.security import generate_password_hash, check_password_hash
 from slugify import slugify
+from datetime import datetime
 
 # Миксин класс, содержащий метод для события, который создает/обновляет
 # значение поля 'slug' при создании/обновлении экземпляра класса MenuCategory/Food
 # на основе значения поля 'name_category'/'name_food'
-class SlugMixin():
+class ModelMixin():
 
     @staticmethod
     def slugify(target, value, oldvalue, initiator):
@@ -26,8 +27,9 @@ class User(UserMixin, db.Model):
     first_name = db.Column(db.String(25))
     sex = db.Column(db.String(7))
     email = db.Column(db.String(120), index=True, unique=True)
-    phone_number = db.Column(db.String(11), index=True, unique=True)
+    phone_number = db.Column(db.String(10), index=True, unique=True)
     password_hash = db.Column(db.String(128))
+    registration_date = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     addresses = db.relationship('Address', backref='user', lazy='dynamic')
     favs = db.relationship('Food', secondary=user_food, backref=db.backref('users', lazy='dynamic'))
 
@@ -57,10 +59,10 @@ class Address(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
-        return f'Улица {self.street}, {self.house}{self.building}'
+        return f'Ул. {self.street}, {self.house}{self.building}'
 
 # Модель с данными о категориях еды/товаров
-class MenuCategory(SlugMixin, db.Model):
+class MenuCategory(ModelMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name_category = db.Column(db.String(20), unique=True)
     slug = db.Column(db.String(255), unique=True)
@@ -77,7 +79,7 @@ event.listen(MenuCategory.name_category, 'set', MenuCategory.slugify, retval=Fal
 AVAILABLE_MEASURE_TYPES = [(u'г', u'г'), (u'кг', u'кг'), (u'мл', u'мл'), (u'л', u'л')]
 
 # Модель с данными о каждой позиции еды/товара
-class Food(SlugMixin, db.Model):
+class Food(ModelMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name_food = db.Column(db.String(50), unique=True, nullable=False)
     slug = db.Column(db.String(255), unique=True)
