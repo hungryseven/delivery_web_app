@@ -1,3 +1,4 @@
+/* Эффект выделения карточек при наведении на них */
 .card {
     box-shadow: 0 4px 6px 0 rgba(22, 22, 26, 0.18);
     border-radius: 5;
@@ -7,3 +8,70 @@
 .card:hover {
     transform: scale(1.03);
 }
+
+/* Настраивает положение баджа с количеством товаров у корзины */
+.cartIcon {
+    position: relative;
+}
+
+.cartIcon span{
+    position: absolute;
+    top: -17px;
+    right: -17px;
+    display: block;
+}
+
+/* Запрещает изменять размеры textarea */
+textarea {
+    resize: none;
+}
+
+/* Подсвечивание ссылок-иконок при наведении на них */
+.delete-address i:hover,
+.cart-delete-item i:hover,
+.edit_address i:hover,
+.empty-the-cart:hover,
+.show-order i:hover,
+.breadcrumb-link:hover {
+    color: red;
+}
+
+/* Выделение активной ссылки "хлебных крошек" */
+.active.breadcrumb-link { 
+    color: red;
+}
+
+/* Эффект выделения элементов навбаров при наведении на них */
+.nav .nav-link {
+    position: relative;
+}
+
+.nav .nav-link:hover {
+    color: red;
+}
+
+.nav .nav-link::after {
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    background-color: red;
+    color: transparent;
+    width: 0%;
+    content: '.';
+    height: 2px;
+}
+
+.active.nav-link { 
+    color: red;
+}
+
+.nav .nav-link:hover::after {
+    width: 100%;
+}
+
+.nav .nav-link {
+    transition: all 0.25s;
+}
+  

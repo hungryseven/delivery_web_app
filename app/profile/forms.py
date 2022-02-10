@@ -47,7 +47,7 @@ class PasswordForm(FlaskForm):
 
 # Форма для добавления, редактирования и удаления адресов пользователей.
 # Атрибут 'address_id' необходим для скрытого поля в форме для того,
-# чтобы вытащить нужный адрес из БД для редактирования/удаления
+# чтобы вытащить нужный адрес из БД для редактирования
 class AddressForm(FlaskForm):
     address_id = IntegerField('ID адреса')
     street = StringField('Улица', validators=[DataRequired(message=validaion_messages['data'])])
@@ -59,4 +59,3 @@ class AddressForm(FlaskForm):
     additional_info = StringField('Дополнительная информация')
     submit_address = SubmitField('Сохранить')
     edit_address = SubmitField('Сохранить')
-    delete_address = SubmitField('Удалить')

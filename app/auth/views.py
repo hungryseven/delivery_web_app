@@ -18,7 +18,7 @@ def login():
         phone_number = parse_phone_number(login_form.phone_number.data)[2:]
         user = User.query.filter_by(phone_number=phone_number).first()
         if user is None or not user.check_password(login_form.password.data):
-            flash('Неверный номер телефона или пароль')
+            flash('Неверный номер телефона или пароль', category='alert alert-danger')
             return redirect(url_for('auth.login'))
         login_user(user, remember=login_form.remember_me.data)
         # Парсим URL на наличие 'next' аргумента строки запроса,
@@ -75,7 +75,7 @@ def verify():
             session.pop('first_name')
             session.pop('phone_number')
             session.pop('password')
-            flash('Вы успешно зарегистрировались!')
+            flash('Вы успешно зарегистрировались!', category='alert alert-success')
             return redirect(url_for('auth.login'))
     # Условие выполнится, если код подтверждения будет запрашиваться
     # при восстановлении пароля 
@@ -101,8 +101,8 @@ def reset_password():
         session.pop('phone_number')
         prev_page = request.args.get('prev')
         if not prev_page:
-            flash('Пароль успешно изменен')
+            flash('Пароль успешно изменен', category='alert alert-success')
             return redirect(url_for('auth.login'))
-        flash('Пароль успешно изменен')
+        flash('Пароль успешно изменен', category='alert alert-success')
         return redirect(prev_page)
     return render_template('auth/reset_password.html', title='Восстановление пароля', reset_form=reset_form)

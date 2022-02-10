@@ -1,0 +1,25 @@
+{% macro render_field(field) %}
+    {% set id = kwargs.get('id', field.id) %}
+    {{ field.label(class_="form-label", for=id) }}
+    {{ field(class_="form-control", **kwargs)|safe }}
+    {% if field.errors %}
+        {% for error in field.errors %}
+            <span class="FieldError" id="error-{{ id }}" style="color: red;">{{ error }}</span>
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
+
+{% macro render_floating_field(field) %}
+    {% set id = kwargs.get('id', field.id) %}
+    {{ field(class_="form-control", **kwargs)|safe }}
+    {{ field.label(class_="form-label", for=kwargs.get('id', field.id)) }}
+    {% if field.errors %}
+        {% for error in field.errors %}
+            <span class="FieldError" id="error-{{ id }}" style="color: red;">{{ error }}</span>
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
+
+{% macro render_checkbox_field(field) %}
+    {{ field(class_="form-check-input", type='checkbox', **kwargs) }} {{ field.label(class_="form-check-label") }}
+{% endmacro %}

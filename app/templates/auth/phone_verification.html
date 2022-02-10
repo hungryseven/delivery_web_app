@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from "_render_field.html" import render_field %}
 
 {% block app_content %}
     {% include '_flashed.html' %}
@@ -15,11 +16,7 @@
                     <form action="" method="post" novalidate>
                         {{ verification_form.hidden_tag() }}
                         <div class="mb-3">
-                            {{ verification_form.code.label(class_="form-label", for="InputCode") }}
-                            {{ verification_form.code(class_="form-control", id="InputCode") }}
-                            {% for error in verification_form.code.errors %}
-                                <span style="color: red;">{{ error }}</span>
-                            {% endfor %}
+                            {{ render_field(verification_form.code) }}
                         </div>
                         <div class="mb-3">
                             {{ verification_form.submit_code(class_="btn btn-primary btn-lg w-100") }}

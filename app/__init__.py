@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_admin import Admin
 from flask_breadcrumbs import Breadcrumbs
+from flask_wtf.csrf import CSRFProtect
 from config import Config
 
 db = SQLAlchemy()
@@ -15,10 +16,11 @@ login.login_view = 'auth.login'
 login.login_message = 'Авторизуйтесь для доступа к данной странице'
 admin = Admin(template_mode='bootstrap4')
 breadcrumbs = Breadcrumbs()
+csrf = CSRFProtect()
 
-file_path = os.path.join(os.path.dirname(__file__), 'files')
+images_path = os.path.join(os.path.dirname('/app/static/food_images'), 'food_images')
 try:
-    os.mkdir(file_path)
+    os.mkdir(images_path)
 except OSError:
     pass
 
@@ -27,10 +29,11 @@ def create_app(config=Config):
     app.config.from_object(config)
 
     db.init_app(app)
-    migrate.init_app(app, db)
+    migrate.init_app(app, db, render_as_batch=True)
     login.init_app(app)
     admin.init_app(app)
     breadcrumbs.init_app(app)
+    csrf.init_app(app)
 
     from app.main import bp as main_bp
     app.register_blueprint(main_bp)

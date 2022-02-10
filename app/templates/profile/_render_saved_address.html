@@ -1,0 +1,69 @@
+{% from "_render_field.html" import render_field %}
+
+{% macro render_saved_address(form, address_inst, id) %}
+    <div class="saved-address" id="saved-address{{ address_inst.id }}">
+        <div class="address-card card mb-2" id="address-card{{ address_inst.id }}">
+            <div class="card-body">
+                <div class="row d-flex align-items-center text-center">
+                    <div class="col-2">
+                        <i class="bi bi-building" style="font-size: 1.5rem"></i>
+                    </div>
+                    <div class="col text-truncate">
+                        Улица {{ address_inst.street }}, {{ address_inst.house }}{{ address_inst.building }}
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center col-2">
+                        <a href="" class="edit_address link-dark"  id="edit_address{{ address_inst.id }}" data-bs-toggle="modal" data-bs-target="#EditAddressModal{{ address_inst.id }}">
+                            <i class="bi bi-pencil" style="font-size: 1.5rem"></i>
+                        </a>
+                        <a href="#" class="delete-address link-dark mx-3" id="delete-address{{ address_inst.id }}">
+                            <i class="bi bi-x-lg" style="font-size: 1.15rem"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="EditAddressModal{{ address_inst.id }}" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title" id="EditAddressLabel">Адрес доставки</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" method="post" class="EditAddressForm" id="EditAddressForm{{ address_inst.id }}" novalidate>
+                            {{ form.hidden_tag() }}
+                            <div class="row g-3">
+                                {{ form.address_id(class_="form-control", type="hidden", id=address_inst.id, value=address_inst.id) }}
+                                <div class="col-md-6">
+                                    {{ render_field(form.street, id=form.street.id+id, value=address_inst.street) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ render_field(form.house, id=form.house.id+id, value=address_inst.house) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ render_field(form.building, id=form.building.id+id, value=address_inst.building) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ render_field(form.entrance, id=form.entrance.id+id, value=address_inst.entrance) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ render_field(form.floor, id=form.floor.id+id, value=address_inst.floor) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ render_field(form.apartment, id=form.apartment.id+id, value=address_inst.apartment) }}
+                                </div>
+                                <div class="col-12">
+                                    {{ render_field(form.additional_info, id=form.additional_info.id+id, value=address_inst.additional_info) }}
+                                </div>
+                            </div>
+                            <div class="modal-footer border-0 position-relative">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                {{ form.edit_address(class_="EditBtn btn btn-primary", id="EditBtn"+id) }}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

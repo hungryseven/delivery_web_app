@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from "_render_field.html" import render_field %}
 
 {% block app_content %}
     {% include '_flashed.html' %}
@@ -9,36 +10,20 @@
                 <form action="" method="post" novalidate>
                     {{ register_form.hidden_tag() }}
                     <div class="mb-3">
-                        {{ register_form.first_name.label(class_="form-label", for="InputName") }}
-                        {{ register_form.first_name(class_="form-control", id="InputName") }}
-                        {% for error in register_form.first_name.errors %}
-                            <span style="color: red;">{{ error }}</span>
-                        {% endfor %}
+                        {{ render_field(register_form.first_name) }}
                     </div>
                     <div class="mb-3">
-                        {{ register_form.phone_number.label(class_="form-label", for="InputPhone") }}
-                        {{ register_form.phone_number(class_="form-control", id="InputPhone") }}
-                        {% for error in register_form.phone_number.errors %}
-                            <span style="color: red;">{{ error }}</span>
-                        {% endfor %}
+                        {{ render_field(register_form.phone_number) }}
                     </div>
                     <div class="mb-3">
-                        {{ register_form.password.label(class_="form-label", for="InputPassword") }}
-                        {{ register_form.password(class_="form-control", id="InputPassword") }}
-                        {% for error in register_form.password.errors %}
-                            <span style="color: red;">{{ error }}</span>
-                        {% endfor %}
+                        {{ render_field(register_form.password) }}
                         <div id="PasswordHelp" class="form-text">
                             Ваш пароль должен состоять из 8-20 символов, содержать буквы и цифры и не должен содержать пробелов, 
                             специальных символов или эмодзи.
                         </div>
                     </div>
                     <div class="mb-3">
-                        {{ register_form.password2.label(class_="form-label", for="InputPassword2") }}
-                        {{ register_form.password2(class_="form-control", id="InputPassword2") }}
-                        {% for error in register_form.password2.errors %}
-                            <span style="color: red;">{{ error }}</span>
-                        {% endfor %}
+                        {{ render_field(register_form.password2) }}
                     </div>
                     <div class="mb-3">
                         {{ register_form.submit_register(class_="btn btn-primary btn-lg w-100") }}
@@ -49,7 +34,7 @@
     </div>
     <script>
         $(document).ready(function(){
-            $("#InputPhone").inputmask({"mask": "+7 999 999-99-99"});
+            $("#phone_number").inputmask({"mask": "+7 999 999-99-99"});
         });
     </script>
 {% endblock %}
