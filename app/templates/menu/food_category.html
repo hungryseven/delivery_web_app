@@ -7,7 +7,7 @@
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4 g-4">
             {% for food in category.foods.all() %}
                 <div class="col" id="food{{ food.id }}">
-                    <div class="card h-100">
+                    <div class="card card-focus h-100">
                         <a href="{{ url_for('menu.food', food_category=category.slug, food=food.slug) }}">
                             <img src="/static/food_images/{{ food.path }}" class="card-img-top img-fluid" alt="{{ food.name_food }}" title="{{ food.name_food }}">
                         </a>

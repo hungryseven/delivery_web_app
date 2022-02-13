@@ -8,7 +8,7 @@
                 <h5 class="mb-4 text-center">Ваши заказы</h5>
                 {% for order in orders %}
                     {% set local_datetime = order.start_order.replace(tzinfo=timezone.utc).astimezone(tz=None).strftime('%d.%m.%y в %H:%M') %}
-                    <div class="card mb-2">
+                    <div class="card card-focus mb-2">
                         <div class="card-body">
                             <div class="row align-items-center text-center">
                                 <div class="col-md-3">

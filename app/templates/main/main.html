@@ -1,4 +1,76 @@
 {% extends 'base.html' %}
 
 {% block app_content %}
+    <div class="container">
+        <div class="main-top">
+            <h3 class="mb-5">Топ позиций суши</h3>
+            <p class="text-muted col-md-6 mb-5">
+                В ассортименте представлены роллы, суши, сеты и напитки на любой вкус. 
+                Мы рекомендуем обязательно попробовать топ позиции нашего меню!
+            </p>
+        </div>
+        <div class="main-content">
+            <div class="row row-cols-1 g-4">
+                {% for category in popular_foods %}
+                    {% set category_inst = MenuCategory.query.filter_by(name_category=category).first() %}
+                    <div class="col">
+                        <div class="row d-flex justify-content-center align-items-center">
+                            <div class="col">
+                                <h5>{{ category }}</h5>
+                            </div>
+                            <div class="col text-end">
+                                <a href="{{ url_for('menu.food_category', food_category=category_inst.slug) }}" class="btn btn-outline-danger rounded-pill">
+                                    Смотреть меню
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 row-cols-xl-4 g-4">
+                            {% for food_id in popular_foods[category] %}
+                                {% set food_inst = Food.query.get(food_id) %}
+                                <div class="col d-flex align-items-stretch py-5" id="food{{ food_inst.id }}">
+                                    <div class="card card-focus h-100">
+                                        <a href="{{ url_for('menu.food', food_category=category_inst.slug, food=food_inst.slug) }}">
+                                            <img src="/static/food_images/{{ food_inst.path }}" class="card-img-top img-fluid" alt="{{ food_inst.name_food }}" title="{{ food_inst.name_food }}">
+                                        </a>
+                                        <div class="card-body">
+                                            <h6 class="card-title">{{ food_inst.name_food }}</h6>
+                                            {% if food_inst.description %}
+                                                <p class="card-text">{{ food_inst.weight }} {{ food_inst.measure }} - {{ food_inst.description }}</p>
+                                            {% else %}
+                                                <p class="card-text">{{ food_inst.weight }} {{ food_inst.measure }}</p>
+                                            {% endif %}
+                                        </div>
+                                        <div class="card-footer bg-white border-0">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="cart-add" id="cart-add{{ food_inst.id }}">
+                                                    <button type="button" class="cart-btn btn btn-outline-success btn-sm" id="cart-btn{{ food_inst.id }}">
+                                                        В корзину
+                                                    </button>
+                                                </div>
+                                                <div class="cart-plus-minus d-flex align-items-center visually-hidden" id="cart-plus-minus{{ food_inst.id }}">
+                                                    <button type="button" class="cart-decrease btn btn-outline-danger btn-sm" id="cart-decrease{{ food_inst.id }}">
+                                                        <i class="bi bi-arrow-left-circle"></i>
+                                                    </button>
+                                                    <span class="mx-2 cart-quantity" id="cart-quantity{{ food_inst.id }}"></span>
+                                                    <button type="button" class="cart-increase btn btn-outline-danger btn-sm" id="cart-increase{{ food_inst.id }}">
+                                                        <i class="bi bi-arrow-right-circle"></i>
+                                                    </button>
+                                                </div>
+                                                <div>
+                                                    <button type="button" class="favourites btn btn-outline-danger btn-sm" id="fav{{ food_inst.id }}">
+                                                        <i class="bi bi-heart"></i>
+                                                    </button>
+                                                </div>
+                                                <p class="card-text fs-6">{{ food_inst.price }}.00 р.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 {% endblock %}

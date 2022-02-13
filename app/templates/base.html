@@ -33,13 +33,13 @@
               <a href="{{ url_for('menu.menu') }}" class="nav-link px-3 link-dark">Меню</a>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link px-3 link-dark">Доставка</a>
+              <a href="{{ url_for('main.delivery') }}" class="nav-link px-3 link-dark">Доставка</a>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link px-3 link-dark">Клиентам</a>
+              <a href="{{ url_for('main.clients') }}" class="nav-link px-3 link-dark">Клиентам</a>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link px-3 link-dark">Новости</a>
+              <a href="{{ url_for('main.news') }}" class="nav-link px-3 link-dark">Новости</a>
             </li>
           </ul>
     
@@ -94,11 +94,21 @@
           <div class="col">
             <h6>Навигация</h6>
             <ul class="nav flex-column">
-              <li class="nav-item mb-2"><a href="{{ url_for('main.index') }}" class="footer-link p-0 text-muted text-decoration-none">Главная</a></li>
-              <li class="nav-item mb-2"><a href="{{ url_for('menu.menu') }}" class="footer-link p-0 text-muted text-decoration-none">Меню</a></li>
-              <li class="nav-item mb-2"><a href="#" class="footer-link p-0 text-muted text-decoration-none">Доставка</a></li>
-              <li class="nav-item mb-2"><a href="#" class="footer-link p-0 text-muted text-decoration-none">Клиентам</a></li>
-              <li class="nav-item mb-2"><a href="#" class="footer-link p-0 text-muted text-decoration-none">Новости</a></li>
+              <li class="nav-item mb-2">
+                <a href="{{ url_for('main.index') }}" class="footer-link p-0 link-dark text-decoration-none">Главная</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a href="{{ url_for('menu.menu') }}" class="footer-link p-0 link-dark text-decoration-none">Меню</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a href="{{ url_for('main.delivery') }}" class="footer-link p-0 link-dark text-decoration-none">Доставка</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a href="{{ url_for('main.clients') }}" class="footer-link p-0 link-dark text-decoration-none">Клиентам</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a href="{{ url_for('main.news') }}" class="footer-link p-0 link-dark text-decoration-none">Новости</a>
+              </li>
             </ul>
           </div>
       

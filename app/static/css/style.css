@@ -1,11 +1,11 @@
 /* Эффект выделения карточек при наведении на них */
-.card {
+.card-focus {
     box-shadow: 0 4px 6px 0 rgba(22, 22, 26, 0.18);
     border-radius: 5;
     transition: transform 0.2s ease;
 }
 
-.card:hover {
+.card-focus:hover {
     transform: scale(1.03);
 }
 
@@ -32,13 +32,17 @@ textarea {
 .edit_address i:hover,
 .empty-the-cart:hover,
 .show-order i:hover,
-.breadcrumb-link:hover {
+.footer-link:hover {
     color: red;
 }
 
-/* Выделение активной ссылки "хлебных крошек" */
+/* Эффект при наведении и выделение активной ссылки "хлебных крошек" */
+.breadcrumb-link:hover {
+    color: rgb(255, 110, 110);
+}
+
 .active.breadcrumb-link { 
-    color: red;
+    color: rgb(255, 110, 110);
 }
 
 /* Эффект выделения элементов навбаров при наведении на них */

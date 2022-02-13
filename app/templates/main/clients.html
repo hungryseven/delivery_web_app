@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block app_content %}
+    <div class="container clients">
+        <div class="clients-top mb-5">
+            <h3 class="mb-5">Клиентам</h3>
+            <p class="text-muted col-md-6">
+                Наши суши – самые вкусные в городе. Мы готовим их из самых свежих продуктов и соблюдаем полную чистоту на кухне. 
+                Посмотрите, что входит в ваш ролл:
+            </p>
+        </div>
+        <div class="clients-info">
+            <div class="info row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 row-cols-xl-4 g-4 py-5">
+                <div class="col">
+                    <div class="card-info h-100">
+                        <img src="{{ url_for('static', filename='pages_content/clients/image1.svg') }}" class="card-img-top img-fluid" style="max-height: 100px;">
+                        <div class="item-text text-center">
+                            <div class="title fs-5 mb-2">Fresh made</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="text text-muted text-center">Мы гарантируем свежесть продуктов и не используем замороженную рыбу</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card-info h-100">
+                        <img src="{{ url_for('static', filename='pages_content/clients/image2.svg') }}" class="card-img-top img-fluid" style="max-height: 100px;">
+                        <div class="item-text text-center">
+                            <div class="title fs-5 mb-2">Рецепты от шеф-повара</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="text text-muted text-center">Мы предлагаем как классические суши, так и авторские рецепты от шеф-повара</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card-info h-100">
+                        <img src="{{ url_for('static', filename='pages_content/clients/image3.svg') }}" class="card-img-top img-fluid" style="max-height: 100px;">
+                        <div class="item-text text-center">
+                            <div class="title fs-5 mb-2">Качественные ингредиенты</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="text text-muted text-center">Мы не используем усилители вкуса. Все продукты закупаем у проверенных поставщиков</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card-info h-100">
+                        <img src="{{ url_for('static', filename='pages_content/clients/image4.svg') }}" class="card-img-top img-fluid" style="max-height: 100px;">
+                        <div class="item-text text-center">
+                            <div class="title fs-5 mb-2">Чистая кухня</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="text text-muted text-center">Весь процесс приготовления проходит в соответствии со всеми санитарными нормами</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clients-codex">
+            <h3 class="mb-5">Наш кодекс</h3>
+            <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-2 g-4">
+                <div class="col">
+                    <div class="card py-4 h-100">
+                        <div class="row row-cols-2 d-flex align-items-center">
+                            <div class="col-2 text-center">
+                                <span class="fs-5" style="color: green;"><strong>01</strong></span>
+                            </div>
+                            <div class="col-10">
+                                <span><strong>Не экономить на объёме роллов</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card py-4 h-100">
+                        <div class="row row-cols-2 d-flex align-items-center">
+                            <div class="col-2 text-center">
+                                <span class="fs-5" style="color: green;"><strong>02</strong></span>
+                            </div>
+                            <div class="col-10">
+                                <span><strong>Не оставить голодными собаку и кота</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card py-4 h-100">
+                        <div class="row row-cols-2 d-flex align-items-center">
+                            <div class="col-2 text-center">
+                                <span class="fs-5" style="color: green;"><strong>03</strong></span>
+                            </div>
+                            <div class="col-10">
+                                <span><strong>Доставлять заказ точно в срок и без стресса для клиента</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card py-4 h-100">
+                        <div class="row row-cols-2 d-flex align-items-center">
+                            <div class="col-2 text-center">
+                                <span class="fs-5" style="color: green;"><strong>04</strong></span>
+                            </div>
+                            <div class="col-10">
+                                <span><strong>Следовать традициям японской кухни</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

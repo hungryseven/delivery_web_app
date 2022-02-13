@@ -28,7 +28,7 @@
                 <div class="cart-food-cards">
                 {% for food_id, quantity in cart.items() %}
                     {% set food = Food.query.get(food_id) %}
-                    <div class="card cart-food mb-2" id="cart-food{{ food.id }}">
+                    <div class="card card-focus cart-food mb-2" id="cart-food{{ food.id }}">
                         <div class="row d-flex justify-content-center align-items-center">
                             <div class="col-sm-2">
                                 <a href="{{ url_for('menu.food', food_category=food.category.slug, food=food.slug) }}" class="link-dark text-decoration-none">

@@ -2,7 +2,7 @@ from cProfile import label
 from cgitb import text
 from flask import jsonify, render_template, redirect, session, request, jsonify, url_for, flash, abort
 from flask_login import current_user, login_required
-from app import db
+from app import db, csrf
 from app.models import Food, Address, Order, OrderFood
 from app.cart import bp as cart_bp
 from app.cart.forms import OrderForm
@@ -453,6 +453,10 @@ def insert_address():
 # Функция-представление устанавливает варианты вабора времени доставки заказа
 # в зависимости от выбранной даты
 @cart_bp.route('/order/set_time_choices', methods=['POST'])
+
+# Выключил CSRF защиту на эту фукнцию, т.к. перестал работать скрипт при загрузке страницы.
+# Пока не знаю, как пофиксить
+@csrf.exempt
 def set_time_choices(): 
     date = request.form.get('date')
     time_choices = create_time_choices(date)
