@@ -32,7 +32,8 @@ textarea {
 .edit_address i:hover,
 .empty-the-cart:hover,
 .show-order i:hover,
-.footer-link:hover {
+.footer-link:hover,
+.order-category:hover {
     color: red;
 }
 

@@ -6,66 +6,85 @@
         <div class="row d-flex justify-content-center align-items-center">
             <div class="col-12 col-md-8 col-lg-6 col-xl-5">
                 <h5 class="mb-4 text-center">Ваши заказы</h5>
-                {% for order in orders %}
-                    {% set local_datetime = order.start_order.replace(tzinfo=timezone.utc).astimezone(tz=None).strftime('%d.%m.%y в %H:%M') %}
-                    <div class="card card-focus mb-2">
-                        <div class="card-body">
-                            <div class="row align-items-center text-center">
-                                <div class="col-md-3">
-                                    Заказ №{{ order.id }}
-                                </div>
-                                <div class="col-md-7">
-                                    {{ local_datetime }}
-                                </div>
-                                <div class="col-md">
-                                    <a href="" class="show-order link-dark" id="show-order{{ order.id }}" data-bs-toggle="modal" data-bs-target="#OrderModal{{ order.id }}">
-                                        <i class="bi bi-card-list" style="font-size: 1.5rem"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal fade" id="OrderModal{{ order.id }}" tabindex="-1">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header border-0">
-                                    <h5 class="modal-title" id="OrderModalLabel">Заказ №{{ order.id }}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>Дата оформления заказа: {{ local_datetime }}</p>
-                                    <p>Статус заказа: {{ order.order_status }}</p>
-                                    {% for food in order.foods %}
-                                        {% set food_inst = Food.query.get(food.food_id) %}
-                                        <div class="row d-flex justify-content-center align-items-center">
-                                            <div class="col-md-2">
-                                                <p>{{ food.food_quantity }} x</p>
-                                            </div>
-                                            <div class="col-md-7">
-                                                <p>{{ food_inst.name_food }}</p>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <p>{{ food.food_quantity * food_inst.price }} руб.</p>
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                                    <div class="row d-flex justify-content-center align-items-center">
-                                        <div class="col-md">
-                                            <p><strong>Сумма заказа</strong></p>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <p>{{ order.total_price }} руб.</p>
-                                        </div>
+                {% if orders.all() %}
+                    {% for order in orders %}
+                        {% set local_datetime = order.start_order.replace(tzinfo=timezone.utc).astimezone(tz=None).strftime('%d.%m.%y в %H:%M') %}
+                        <div class="card card-focus mb-2">
+                            <div class="card-body">
+                                <div class="row align-items-center text-center">
+                                    <div class="col-md-3">
+                                        Заказ №{{ order.id }}
+                                    </div>
+                                    <div class="col-md-7">
+                                        {{ local_datetime }}
+                                    </div>
+                                    <div class="col-md">
+                                        <a href="" class="show-order link-dark" id="show-order{{ order.id }}" data-bs-toggle="modal" data-bs-target="#OrderModal{{ order.id }}">
+                                            <i class="bi bi-card-list" style="font-size: 1.5rem"></i>
+                                        </a>
                                     </div>
                                 </div>
-                                <div class="modal-footer border-0">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                                    <a href="{{ url_for('cart.repeat_order', order_id=order.id) }}" class="btn btn-primary" id="RepeatOrder{{ order.id }}">Повторить</a>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="OrderModal{{ order.id }}" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header border-0">
+                                        <h5 class="modal-title" id="OrderModalLabel">Заказ №{{ order.id }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Дата оформления заказа: {{ local_datetime }}</p>
+                                        <p>Статус заказа: {{ order.order_status }}</p>
+                                        {% for food in order.foods %}
+                                            {% set food_inst = Food.query.get(food.food_id) %}
+                                            <div class="row d-flex justify-content-center align-items-center">
+                                                <div class="col-md-2">
+                                                    <p>{{ food.food_quantity }} x</p>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <p>{{ food_inst.name_food }}</p>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <p>{{ food.food_quantity * food_inst.price }} руб.</p>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                        <div class="row d-flex justify-content-center align-items-center">
+                                            <div class="col-md">
+                                                <p><strong>Сумма заказа</strong></p>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <p>{{ order.total_price }} руб.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer border-0">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                        <a href="{{ url_for('cart.repeat_order', order_id=order.id) }}" class="btn btn-primary" id="RepeatOrder{{ order.id }}">Повторить</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center mb-5">
+                        <img src="{{ url_for('static', filename='pages_content/profile-orders/empty-order.svg') }}" class="mb-4">
+                        <p class="text-muted">
+                            Пока что вы не совершили ни одного заказа, это нужно срочно исправлять.
+                            Переходите в интересующую вас категорию и заказывайте вкуснейшие
+                        </p>
                     </div>
-                {% endfor %}
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 row-cols-xl-4 g-4">
+                        {% for category in categories %}
+                        <div class="col text-center">
+                            <a href="{{ url_for('menu.food_category', food_category=category.slug) }}" class="order-category link-dark text-decoration-none">
+                                {{ category.name_category }}
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>

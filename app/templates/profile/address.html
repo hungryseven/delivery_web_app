@@ -55,10 +55,14 @@
                     </div>
                 </div>
                 <h5 class="mb-4 text-center">Мои адреса</h5>
-                {% for address in current_user.addresses %}
-                    {% set id = address.id | string %}
-                    {{ render_saved_address(address_form, address, id) }}
-                {% endfor %} 
+                {% if adresses.all() %}
+                    {% for address in adresses %}
+                        {% set id = address.id | string %}
+                        {{ render_saved_address(address_form, address, id) }}
+                    {% endfor %}
+                {% else %}
+                    <p class="text-center text-muted">Вы еще не добавили ни одного адреса</p>
+                {% endif %}
             </div>
         </div>
     </div>

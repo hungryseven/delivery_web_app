@@ -48,7 +48,7 @@ class VerificationForm(FlaskForm):
 
 # Форма запроса номера телефона для восстановления пароля
 class PhoneRequestForm(FlaskForm):
-    phone_number = TelField('Номер телефона', validators=[DataRequired(message=validaion_messages['data'])])
+    requested_phone = TelField('Номер телефона', validators=[DataRequired(message=validaion_messages['data'])])
     submit_phone_number = SubmitField('Отправить код')
 
 # Форма для восстановления пароля

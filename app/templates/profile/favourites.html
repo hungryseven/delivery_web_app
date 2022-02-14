@@ -48,6 +48,11 @@
                     </div>
                 {% endfor %}
             </div>
+        {% else %}
+            <div class="text-center">
+                <img src="{{ url_for('static', filename='pages_content/profile-favs/empty-favs.svg') }}" class="mb-4">
+                <p class="text-muted">Пока что вы не добавили ни одного товара в избранное</p>
+            </div>
         {% endif %}
     </div>
 {% endblock %}

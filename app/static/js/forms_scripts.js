@@ -1,3 +1,5 @@
+// Скрипты для форм на странице адресов в профиле ('profile/address')
+
 /* Функция отображает ошибки полей при валидации.
 Т.к. все формы создаются при помощи WTForms, а ошибки валидации
 отображаются только при полной перезагрузке страницы, то не нашел
@@ -101,5 +103,68 @@ $(function deleteAddress() {
             // Удаляем карточку с адресом
             $(`#saved-address${address_id}`).remove();
         });
+    });
+});
+
+// Скрипты для форм на странице персональной информации в профиле ('profile/info')
+
+// AJAX-запрос для изменения пароля
+$(function changePassword() {
+    $('#ChangePasswordForm').on('submit', function(event) {
+        var $this = $(this);
+        var url_to_change = '/profile/info/change_password';
+        $.ajax({
+            url: url_to_change,
+            type: 'POST',
+            dataType: 'json',
+            data: $this.serialize()
+        })
+        .done(function(data) {
+            // Если результатом является ошибка ввода пароля, то показываем эту ошибку в флеш-сообщении
+            if (data['result'] == 'password_error') {
+                showFlashedMessage(data['flashed']['text'], data['flashed']['category']);
+                // Очищаем поля формы
+                $this[0].reset()
+            // Если результатом является ошибка валидации полей, то показываем эти ошибки
+            } else if (data['result'] == 'fields_error') {
+                // Если до этого была ошибка ввода пароля, то удалим флеш для удобства восприятния инфы
+                $('.flashed').remove();
+                showFieldsErrors(data);
+                $this[0].reset()
+            // Иначе происходит смена пароля, показываем соответствующее флеш-сообщение
+            } else {
+                showFlashedMessage(data['flashed']['text'], data['flashed']['category']);
+                // Сворачиваем коллапс при успешном изменении
+                $('#PasswordFormCollapse').collapse('hide');
+                $this[0].reset()
+            };
+        });
+        event.preventDefault();
+    });
+});
+
+// Скрипты для форм на странице персональной информации в профиле ('auth/login')
+
+// AJAX-запрос для запроса телефона для восстановления пароля
+$(function requestPhoneNumber() {
+    $('#RequestForm').on('submit', function(event) {
+        var $this = $(this);
+        var url_to_request = '/auth/request_phone';
+        $.ajax({
+            url: url_to_request,
+            type: 'POST',
+            dataType: 'json',
+            data: $this.serialize()
+        })
+        .done(function(data) {
+            // Если результатом является ошибка валидации полей, то показываем эти ошибки
+            if (data['result'] == 'error') {
+                showFieldsErrors(data);
+            // Иначе переходим на страницу ввода кода для подтверждения номера телефона
+            } else {
+                window.location = data['verify_page'];
+            };
+        });
+        event.preventDefault();
     });
 });

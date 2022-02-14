@@ -18,7 +18,7 @@
                                 {% if current_user.is_anonymous %}
                                     {{ render_field(order_form.phone_number) }}
                                 {% else %}
-                                    {{ render_field(order_form.phone_number, value=current_user.phone_number) }}
+                                    {{ render_field(order_form.phone_number, value=current_user.phone_number, readonly="readonly") }}
                                 {% endif %}
                             </div>
                         </div>

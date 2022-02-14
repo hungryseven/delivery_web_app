@@ -1,8 +1,7 @@
-from time import strftime
 from flask import jsonify, redirect, url_for, render_template, flash, request, session
 from flask_login import current_user, login_required
 from app import db
-from app.models import Address, Food
+from app.models import Address, Food, MenuCategory
 from app.profile import bp as profile_bp
 from app.profile.forms import InfoForm, PasswordForm, AddressForm
 from app.auth.phone_verification import request_verification_token
@@ -14,43 +13,59 @@ from datetime import timezone, datetime
 def info():
     info_form = InfoForm()
     password_form = PasswordForm()
-
-    # Так как на странице 2 формы, то проверяем событие нажатия
-    # и валидацию в отдельных условиях
-    if info_form.submit_info.data and info_form.validate():
+    if info_form.validate_on_submit():
         current_user.sex = info_form.sex.data
         current_user.first_name = info_form.first_name.data
         current_user.email = info_form.email.data
         db.session.commit()
         flash('Данные успешно сохранены', category='alert alert-success')
         return redirect(url_for('profile.info'))
-    if password_form.submit_password.data and password_form.validate():
-        if not current_user.check_password(password_form.current_password.data):
-            flash('Неверный пароль', category='alert alert-danger')
-            return redirect(url_for('profile.info'))
-        current_user.set_password(password_form.new_password.data)
-        db.session.commit()
-        flash('Пароль успешно изменен', category='alert alert-success')
-        return redirect(url_for('profile.info'))
     return render_template('profile/info.html', title='Персональные данные', info_form=info_form, password_form=password_form)
 
+# Функция-представление изменения пароля
+@profile_bp.route('/info/change_password', methods=['POST'])
+@login_required
+def change_password():
+    password_form = PasswordForm()
+    if password_form.validate_on_submit():
+
+        # Возвращаем ошибку, если текущий пароль введен неверно
+        if not current_user.check_password(request.form.get('current_password')):
+            return jsonify(
+                {
+                    'result': 'password_error', 
+                    'flashed': {'text': 'Неверный пароль', 'category': 'alert alert-danger'}
+                }
+            )
+
+        current_user.set_password(request.form.get('new_password'))
+        db.session.commit()
+        return jsonify(
+            {
+                'result': 'success',
+                'flashed': {'text': 'Пароль успешно изменен', 'category': 'alert alert-success'}
+            }
+        )
+
+    # Возвращаем ошибки валидации полей формы
+    return jsonify({'result': 'fields_error', 'errors': password_form.errors})
+
 # Функция-представление восстановления пароля внутри профиля.
-# Параметр 'prev' необходим для возврата на страницу профиля
-# после восстановления пароля
 @profile_bp.route('/reset_password')
 @login_required
 def reset_password():
     phone_number = '+7' + current_user.phone_number
     session['phone_number'] = phone_number
     request_verification_token(phone_number)
-    return redirect(url_for('auth.verify', next='reset_password_verify', prev=url_for('profile.info')))
+    return redirect(url_for('auth.verify', action='reset_password_verify',))
 
 # Функция-представление страницы профиля с адресами доставки
 @profile_bp.route('/address')
 @login_required
 def address():
+    adresses = current_user.addresses
     address_form = AddressForm()
-    return render_template('profile/address.html', title='Адрес доставки', address_form=address_form)
+    return render_template('profile/address.html', title='Адрес доставки', address_form=address_form, adresses=adresses)
 
 # Функция-представление добавления адреса
 @profile_bp.route('/address/add', methods=['POST'])
@@ -178,6 +193,7 @@ def get_user_favourites():
 @profile_bp.route('/orders')
 @login_required
 def orders():
-    orders = current_user.orders.all()
-    return render_template('profile/orders.html', title='История заказов',
-                            orders=orders, Food=Food, timezone=timezone, strftime=datetime.strftime)
+    orders = current_user.orders
+    categories = MenuCategory.query.all()
+    return render_template('profile/orders.html', title='История заказов',orders=orders,
+                            categories=categories, Food=Food, timezone=timezone, strftime=datetime.strftime)

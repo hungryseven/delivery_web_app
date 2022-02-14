@@ -39,10 +39,10 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="" method="post" novalidate>
+                        <form action="" method="post" id="RequestForm" novalidate>
                             {{ request_form.hidden_tag() }}
                             <div class="mb-3">
-                                {{ render_field(request_form.phone_number, id="modal_phone_number") }}
+                                {{ render_field(request_form.requested_phone) }}
                             </div>
                             <div class="modal-footer border-0">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
@@ -57,7 +57,7 @@
     <script>
         $(document).ready(function(){
             $("#phone_number").inputmask({"mask": "+7 999 999-99-99"});
-            $("#modal_phone_number").inputmask({"mask": "+7 999 999-99-99"});
+            $("#requested_phone").inputmask({"mask": "+7 999 999-99-99"});
         });
     </script>
 {% endblock %}
