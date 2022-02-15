@@ -18,7 +18,7 @@ admin = Admin(template_mode='bootstrap4')
 breadcrumbs = Breadcrumbs()
 csrf = CSRFProtect()
 
-images_path = os.path.join(os.path.dirname('/app/static/food_images'), 'food_images')
+images_path = os.path.join(os.path.dirname(__file__), 'static', 'food_images')
 try:
     os.mkdir(images_path)
 except OSError:

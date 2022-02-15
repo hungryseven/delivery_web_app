@@ -1,3 +1,4 @@
+import os.path
 from app import db, admin, images_path
 from app.models import AVAILABLE_MEASURE_TYPES, AVAILABLE_ORDER_STATUSES, User, MenuCategory, Food, Order
 from flask import url_for, Markup
@@ -13,7 +14,7 @@ def _list_thumbnail(view, context, model, name):
     if not model.path:
         return ''
     return Markup('<img src="%s">' % url_for('static',
-                                                 filename='food_images/'f'{form.thumbgen_filename(model.path)}'))
+                                                filename=f'food_images/{form.thumbgen_filename(model.path)}'))
 
 # Функция форматирует колонки с объектами класса datetime из UTC в локальное время                                              
 def _datetime_formatter(view, context, model, name):
@@ -122,7 +123,7 @@ class OrderView(ModelView):
     def _user_link_formatter(view, context, model, name):
         field = getattr(model, name, '')
         if field:
-            url = url_for('user.details_view', id=field.id)
+            url = url_for('users.details_view', id=field.id)
             return Markup(f'<a href="{url}">{field}</a>')
         return 'Анонимный пользователь'
 
@@ -195,7 +196,7 @@ class OrderView(ModelView):
             'order_status': AVAILABLE_ORDER_STATUSES
         }
 
-admin.add_view(UserView(User, db.session))
-admin.add_view(MenuCategoryView(MenuCategory, db.session))
-admin.add_view(FoodView(Food, db.session))
-admin.add_view(OrderView(Order, db.session))
+admin.add_view(UserView(User, db.session, name='Пользватели', endpoint='users'))
+admin.add_view(MenuCategoryView(MenuCategory, db.session, name='Категории еды', endpoint='categories'))
+admin.add_view(FoodView(Food, db.session, 'Позиции еды'))
+admin.add_view(OrderView(Order, db.session, name='Заказы'))
