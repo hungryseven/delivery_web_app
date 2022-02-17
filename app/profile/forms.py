@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
 from app.models import User
-from wtforms import StringField, IntegerField, PasswordField, TelField, SubmitField, SelectField
+from wtforms import StringField, IntegerField, PasswordField, SubmitField, SelectField
 from wtforms import widgets
 from wtforms.validators import DataRequired, Email, EqualTo, Length, Regexp, ValidationError
 import email_validator
@@ -69,7 +69,7 @@ class InfoForm(FlaskForm):
     sex = CustomRadioField('Пол', choices=['Мужской', 'Женский'], coerce=str)
 
     first_name = StringField('Имя', validators=[DataRequired(message=validaion_messages['data'])])
-    phone_number = TelField('Телефон')
+    phone_number = StringField('Телефон')
 
     # С кастомным валидатором у пользователя есть возможность не указывать email
     email = StringField('Email', validators=[CustomEmailValidator(message=validaion_messages['incorrect email'])])

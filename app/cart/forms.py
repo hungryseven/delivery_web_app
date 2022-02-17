@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import StringField, SubmitField, TelField, SelectField, RadioField, TextAreaField
+from wtforms import StringField, SubmitField, SelectField, RadioField, TextAreaField
 from wtforms.validators import DataRequired, Length
 
 validaion_messages = {
@@ -10,7 +10,7 @@ validaion_messages = {
 
 class OrderForm(FlaskForm):
     first_name = StringField('Имя', validators=[DataRequired(message=validaion_messages['data'])])
-    phone_number = TelField('Номер телефона', validators=[DataRequired(message=validaion_messages['data'])])
+    phone_number = StringField('Номер телефона', validators=[DataRequired(message=validaion_messages['data'])])
     addresses = SelectField('Адрес доставки', choices=[(0, 'Указать новый адрес')], validate_choice=False)
     street = StringField('Улица', validators=[DataRequired(message=validaion_messages['data'])])
     house = StringField('Дом', validators=[DataRequired(message=validaion_messages['data'])])

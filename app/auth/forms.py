@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from app.models import User
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TelField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, EqualTo, Length, Regexp, ValidationError
 from app.auth.phone_verification import parse_phone_number
 
@@ -15,7 +15,7 @@ validaion_messages = {
 
 # Форма для авторизации
 class LoginForm(FlaskForm):
-    phone_number = TelField('Номер телефона', validators=[DataRequired(message=validaion_messages['data'])])
+    phone_number = StringField('Номер телефона', validators=[DataRequired(message=validaion_messages['data'])])
     password = PasswordField('Пароль', validators=[DataRequired(message=validaion_messages['data'])])
     remember_me = BooleanField('Запомнить меня')
     submit_login = SubmitField('Войти')
@@ -23,7 +23,7 @@ class LoginForm(FlaskForm):
 # Форма для регистрации
 class RegisterForm(FlaskForm):
     first_name = StringField('Имя', validators=[DataRequired(message=validaion_messages['data'])])
-    phone_number = TelField('Номер телефона', validators=[DataRequired(message=validaion_messages['data'])])
+    phone_number = StringField('Номер телефона', validators=[DataRequired(message=validaion_messages['data'])])
     password = PasswordField(
         'Пароль', validators=[DataRequired(message=validaion_messages['data']),
                             Length(min=8, max=20, message=validaion_messages['length']),
@@ -48,7 +48,7 @@ class VerificationForm(FlaskForm):
 
 # Форма запроса номера телефона для восстановления пароля
 class PhoneRequestForm(FlaskForm):
-    requested_phone = TelField('Номер телефона', validators=[DataRequired(message=validaion_messages['data'])])
+    requested_phone = StringField('Номер телефона', validators=[DataRequired(message=validaion_messages['data'])])
     submit_phone_number = SubmitField('Отправить код')
 
 # Форма для восстановления пароля
