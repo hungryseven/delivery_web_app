@@ -1,2 +1,2 @@
 FLASK_APP=delivery_app.py
-FLASK_ENV=development
+FLASK_ENV=production

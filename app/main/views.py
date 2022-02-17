@@ -37,7 +37,7 @@ def find_popular_foods(categories):
             outerjoin(MenuCategory, MenuCategory.id==Food.category_id). \
             filter_by(name_category=category.name_category). \
             group_by(Food.id). \
-            order_by(desc('quantity')). \
+            order_by((desc('quantity')).nullslast()). \
             limit(4).all()
         
         # Достаем из каждого кортежа id позиции/товара
