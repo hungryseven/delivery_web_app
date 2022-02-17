@@ -30,7 +30,7 @@ def find_popular_foods(categories):
         #     ON food.category_id = menu_category.id
         # WHERE menu_category.name_category = category.name_category
         # GROUP BY(food.id)
-        # ORDER BY(quantity) DESC
+        # ORDER BY(quantity) DESC NULLS LAST
         # LIMIT 4
         category_popular_foods = db.session.query(Food.id, func.sum(OrderFood.food_quantity).label('quantity')). \
             outerjoin(OrderFood, Food.id==OrderFood.food_id). \
